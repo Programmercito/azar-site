@@ -7,8 +7,8 @@ interface Props {
 }
 
 const {
-  title = 'Azar — Herramientas del Azar',
-  description = 'Herramientas de aleatoriedad potenciadas por entropía real. Sorteos, dados, cartas y más — todo calculado en tu navegador.'
+  title = 'Azar — Juegos del Azar',
+  description = 'Juegos de aleatoriedad potenciados por entropía real. Sorteos, dados, cartas y más — todo calculado en tu navegador.'
 } = Astro.props;
 ---
 
@@ -27,15 +27,21 @@ const {
     <meta property="og:type" content="website" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,700;1,300;1,400&family=DM+Mono:wght@300;400;500&family=Bebas+Neue&display=swap" />
   </head>
   <body>
 
-    <!-- Entropy bar top -->
+    <!-- Entropy bar top (1px line) -->
     <div id="entropy-bar"></div>
 
-    <!-- Entropy badge -->
-    <div id="entropy-badge">
-      ⟆&nbsp;<span id="entropy-val">0.0%</span>
+    <!-- Premium entropy HUD badge -->
+    <div id="entropy-badge" aria-label="Nivel de entropía en tiempo real">
+      <div id="entropy-pulse"></div>
+      <div>
+        <div id="entropy-label">ENTROPÍA</div>
+        <div id="entropy-val">8.0%</div>
+        <div id="entropy-hex">0x000000</div>
+      </div>
     </div>
 
     <!-- Custom cursor (desktop only) -->
@@ -46,90 +52,113 @@ const {
 
     <script>
       // ═══════════════════════════════════════════════════
-      //  ENTROPY ENGINE
+      //  ENTROPY POOL — for RNG quality (internal, grows silently)
       // ═══════════════════════════════════════════════════
       const POOL_SIZE = 256;
       const pool      = new Uint32Array(POOL_SIZE);
       let poolIdx     = 0;
-      let totalEnt    = 0;
-      const MAX_ENT   = POOL_SIZE * 6;
 
-      // Seed initial pool from crypto if available
-      try { crypto.getRandomValues(pool); totalEnt = POOL_SIZE; } catch {}
+      try { crypto.getRandomValues(pool); } catch {}
 
       function xorMix(a: number): number {
         a ^= a << 13; a ^= a >> 17; a ^= a << 5;
         return a >>> 0;
       }
 
-      function feedEntropy(v: number) {
+      function feedPool(v: number) {
         pool[poolIdx % POOL_SIZE] = xorMix(pool[poolIdx % POOL_SIZE] ^ (v | 0));
         poolIdx = (poolIdx + 1) % POOL_SIZE;
-        totalEnt = Math.min(totalEnt + 2, MAX_ENT);
       }
 
-      // Background entropy: RAF timing jitter (always running)
-      let lastRaf = performance.now();
+      // ═══════════════════════════════════════════════════
+      //  ENTROPY SIGNAL — the LIVE display value
+      //  Decays toward a floor when idle, spikes with activity.
+      //  Never reaches 100% and stays there — always fluctuating.
+      // ═══════════════════════════════════════════════════
+      // ── ENTROPY SIGNAL — live display (decays when idle) ──
+      // Model: pure multiplicative decay toward FLOOR.
+      //   idle:   signal halves every ~1.4s  (DECAY_K^60 ≈ 0.22)
+      //   active: each mousemove pixel adds ~0.45%, fast swipe → +30%+
+      // This ensures it moves visibly: high while moving, drops when stopped.
+      const FLOOR   = 0.08;    // idle rest (~8%)
+      const CEILING = 0.91;    // hard cap (never 100%)
+      const DECAY_K = 0.975;   // per-frame multiplier toward floor
+      let   signal  = FLOOR;
+
+      function boostSignal(amount: number) {
+        signal = Math.min(CEILING, signal + amount);
+      }
+
+      let lastRaf  = performance.now();
       let rafCount = 0;
-      function rafEntropy() {
+      function rafLoop() {
         const now  = performance.now();
         const diff = now - lastRaf;
         lastRaf    = now;
-        // Timing jitter between frames is naturally entropic
-        feedEntropy((diff * 10000) | 0);
-        feedEntropy((now  * 1000)  | 0);
-        rafCount++;
-        if (rafCount % 10 === 0) updateHUD();
-        requestAnimationFrame(rafEntropy);
-      }
-      requestAnimationFrame(rafEntropy);
 
-      // Mouse entropy
+        // Feed pool from timing jitter (always free entropy for RNG)
+        feedPool((diff * 100000) | 0);
+        feedPool((now  * 10000)  | 0);
+
+        // Decay: signal approaches FLOOR exponentially
+        signal = Math.max(FLOOR, signal * DECAY_K + FLOOR * (1 - DECAY_K));
+
+        rafCount++;
+        if (rafCount % 3 === 0) updateHUD();
+        requestAnimationFrame(rafLoop);
+      }
+      requestAnimationFrame(rafLoop);
+
+      // ── Input events ───────────────────────────────────
       document.addEventListener('mousemove', e => {
-        feedEntropy((e.movementX * 137 + e.movementY * 59) | 0);
-        feedEntropy((e.clientX ^ (e.clientY << 8)) | 0);
-        feedEntropy((performance.now() * 10) | 0);
-        totalEnt = Math.min(totalEnt + Math.abs(e.movementX) + Math.abs(e.movementY), MAX_ENT);
+        const speed = Math.hypot(e.movementX, e.movementY);
+        boostSignal(speed * 0.0045);   // fast swipe → big spike
+        feedPool((e.movementX * 137 + e.movementY * 59) | 0);
+        feedPool((e.clientX ^ (e.clientY << 8)) | 0);
       }, { passive: true });
 
-      // Touch entropy (mobile)
       document.addEventListener('touchmove', e => {
         const t = e.touches[0];
-        feedEntropy((t.clientX * 17 + t.clientY * 31) | 0);
-        feedEntropy((performance.now() * 100) | 0);
-        totalEnt = Math.min(totalEnt + 30, MAX_ENT);
+        boostSignal(0.05);
+        feedPool((t.clientX * 17 + t.clientY * 31) | 0);
+        feedPool((performance.now() * 100) | 0);
       }, { passive: true });
 
-      document.addEventListener('touchstart', e => {
-        const t = e.touches[0];
-        feedEntropy((t.clientX ^ (t.clientY << 10)) | 0);
-        feedEntropy((performance.now() | 0));
-        totalEnt = Math.min(totalEnt + 60, MAX_ENT);
+      document.addEventListener('touchstart', () => {
+        boostSignal(0.09);
+        feedPool((performance.now() | 0));
       }, { passive: true });
 
       document.addEventListener('click', e => {
-        feedEntropy((e.clientX * 7 + e.clientY * 11 + performance.now()) | 0);
-        totalEnt = Math.min(totalEnt + 40, MAX_ENT);
+        boostSignal(0.07);
+        feedPool((e.clientX * 7 + e.clientY * 11) | 0);
       }, { passive: true });
 
-      // Device motion (mobile accelerometer)
       if ('DeviceMotionEvent' in window) {
         window.addEventListener('devicemotion', e => {
           const a = e.acceleration;
           if (!a) return;
-          feedEntropy(((a.x ?? 0) * 1000 + (a.y ?? 0) * 500 + (a.z ?? 0) * 250) | 0);
-          totalEnt = Math.min(totalEnt + 20, MAX_ENT);
+          const mag = Math.abs(a.x ?? 0) + Math.abs(a.y ?? 0) + Math.abs(a.z ?? 0);
+          boostSignal(mag * 0.006);
+          feedPool((mag * 1000) | 0);
         }, { passive: true });
       }
 
+      // ── HUD update ─────────────────────────────────────
+      // Shows live % + hex slice from pool — looks like real computation
       function updateHUD() {
-        const pct   = Math.min((totalEnt / MAX_ENT) * 100, 100);
-        const bar   = document.getElementById('entropy-bar')!;
-        const badge = document.getElementById('entropy-badge')!;
-        const val   = document.getElementById('entropy-val')!;
-        bar.style.width    = pct + '%';
-        val.textContent    = pct.toFixed(1) + '%';
-        badge.dataset.charged = pct > 50 ? '1' : '0';
+        const pct    = signal * 100;
+        // Live hex from pool — changes every update showing active computation
+        const hexVal = ((pool[poolIdx % POOL_SIZE] >>> 0) & 0xFFFFFF)
+                         .toString(16).toUpperCase().padStart(6, '0');
+        const bar    = document.getElementById('entropy-bar')!;
+        const val    = document.getElementById('entropy-val')!;
+        const hex    = document.getElementById('entropy-hex');
+        const badge  = document.getElementById('entropy-badge')!;
+        bar.style.width       = pct.toFixed(2) + '%';
+        val.textContent       = pct.toFixed(1) + '%';
+        if (hex) hex.textContent = '0x' + hexVal;
+        badge.dataset.charged = pct > 40 ? '1' : '0';
       }
 
       // ── azarRandom: public API ─────────────────────────
@@ -141,17 +170,27 @@ const {
         s = xorMix(s);
         pool[poolIdx % POOL_SIZE] = s;
         poolIdx = (poolIdx + 1) % POOL_SIZE;
-        return (s >>> 0) / 4294967296;
+        
+        // Convert signed 32-bit integer to unsigned, then divide by 2^32 (4294967296)
+        // to normalize the value to a float between 0.0 (inclusive) and 1.0 (exclusive)
+        const humanEntropy = (s >>> 0) / 4294967296;
+        // Machine entropy from the browser's PRNG [0, 1)
+        const machineEntropy = Math.random();
+        
+        // Blend them securely: modulo 1 addition preserves uniform distribution
+        return (humanEntropy + machineEntropy) % 1;
       }
 
       (window as any).azarRandom = azarRandom;
       (window as any).azarPool   = pool;
+      // Expose live signal level for visualizers
+      Object.defineProperty(window, 'azarSignal', { get: () => signal });
 
       // ═══════════════════════════════════════════════════
       //  CURSOR — GPU-accelerated via transform3d
       // ═══════════════════════════════════════════════════
-      const dot  = document.getElementById('cursor-dot');
-      const ring = document.getElementById('cursor-ring');
+      const dot  = document.getElementById('cursor-dot')!;
+      const ring = document.getElementById('cursor-ring')!;
       const isMobile = window.matchMedia('(pointer: coarse)').matches;
 
       if (dot && ring && !isMobile) {

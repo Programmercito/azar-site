@@ -89,18 +89,49 @@ Tailwind v4, haciéndolos disponibles como clases utilitarias (`text-gold`, `bg-
 
 ## Motor de Entropía
 
-Definido en `src/layouts/Layout.astro` (`<script>`), expone dos globales:
+Definido en `src/layouts/Layout.astro` (`<script>`), expone tres globales:
 
 ```typescript
-window.azarRandom: () => number   // RNG [0, 1) seeded por entropía del cursor
-window.azarPool:   Uint32Array    // El pool de entropía crudo (256 uint32)
+window.azarRandom: () => number   // RNG [0, 1) que mezcla entropía humana + máquina
+window.azarPool:   Uint32Array    // Pool crudo de 256 uint32 (para visualizadores)
+window.azarSignal: number         // Señal de entropía en vivo [0, 1) — sólo lectura
 ```
 
-**Todos los componentes de herramientas usan `(window as any).azarRandom()`** — nunca `Math.random()`.
+**Todos los componentes usan `(window as any).azarRandom()`** — nunca `Math.random()` de forma aislada.
+`azarRandom()` suma matemáticamente el valor del pool de entropía humana (cursor) y el valor de `Math.random()` (máquina) usando módulo 1 (`(human + machine) % 1`). Esto garantiza la mejor calidad estocástica posible, combinando la imprevisibilidad de ambos mundos.
 
-El algoritmo: los eventos `mousemove` XOR-mezclan coordenadas y timing en el pool. Al
-solicitar un número, se toman 8 valores del pool, se mezclan con el timestamp actual, y
-se aplica xorshift32.
+### Dos capas separadas
+
+| Capa | Variable | Propósito |
+|------|----------|----------|
+| **Pool interno** | `pool` (Uint32Array×256) | Calidad del RNG. Se alimenta con XOR de todos los eventos y jitter de RAF. Siempre acumula. |
+| **Señal visual** | `signal` [0.08–0.91] | Lo que se muestra en el HUD. Modelo de **decaimiento multiplicativo**: sube con interacción, cae cuando el usuario para. |
+
+### Modelo de decaimiento (signal)
+
+```
+signal = max(FLOOR, signal × DECAY_K + FLOOR × (1 - DECAY_K))
+```
+
+- **DECAY_K = 0.975** por frame → vida media ~1.4 segundos en reposo
+- **FLOOR = 0.08** → nunca cae de 8%
+- **CEILING = 0.91** → nunca llega a 100%
+- `mousemove`: `signal += speed × 0.0045` (movimiento rápido = gran spike)
+- `touchstart/click`: `signal += 0.07–0.09`
+
+Esto significa: **moverse rápido → 70–90%**, **parar → cae a 8% en ~2s**, **taps móvil → picos cortos**. El HUD muestra además un valor hex del pool que cambia en cada frame, confirmando computación activa.
+
+### HUD
+
+```
+[ • ]  ENTROPÍA
+       47.3%
+       0xA3F9C2
+```
+
+- Punto amarillo pulsante cuando `signal > 40%`
+- Porcentaje actualizado cada 3 frames de RAF
+- Hex cambia cada actualización mostrando que hay cómputo real
 
 ---
 
@@ -124,6 +155,9 @@ se aplica xorshift32.
    en `mousemove` sin throttle con `requestAnimationFrame`.
 9. **Entropía móvil**: el motor ya colecta de `touchmove`, `touchstart`, `click` y
    `devicemotion`. No agregar más listeners de entropía en los componentes individuales.
+10. **CSS en herramientas con HTML dinámico**: si un componente inyecta HTML via `innerHTML`
+    (e.g. dados, moneda multi), los estilos Astro quedan scoped y NO aplican a esos elementos.
+    Usar `<style is:global>` con prefijos únicos (ej. `azar-`) para evitar colisiones globales.
 
 ---
 

@@ -80,35 +80,35 @@ const textColorMap: Record<string, string> = {
 };
 ---
 
-<section id="tools" class="py-24 px-6">
+<section id="tools" class="py-16 sm:py-24 px-4 sm:px-6">
   <div class="max-w-6xl mx-auto">
 
     <!-- Header -->
-    <div class="mb-20 text-center">
-      <div class="flex items-center gap-4 mb-8">
+    <div class="mb-12 sm:mb-20 text-center">
+      <div class="flex items-center gap-4 mb-6 sm:mb-8">
         <div class="flex-1 h-px" style="background: linear-gradient(90deg, transparent, rgba(212,168,67,.15), transparent)"></div>
-        <span class="font-mono text-[10px] tracking-[.25em] uppercase text-muted">Herramientas</span>
+        <span class="font-mono text-[10px] tracking-[.25em] uppercase text-muted">Juegos</span>
         <div class="flex-1 h-px" style="background: linear-gradient(90deg, transparent, rgba(212,168,67,.15), transparent)"></div>
       </div>
-      <h2 class="font-display text-[clamp(3rem,8vw,7rem)] leading-none text-prim mb-4">
-        LAS <span class="text-gold">HERRAMIENTAS</span>
+      <h2 class="font-display text-[clamp(2.5rem,8vw,7rem)] leading-none text-prim mb-4">
+        LOS <span class="text-gold">JUEGOS</span>
       </h2>
-      <p class="font-serif text-lg font-light italic text-sec max-w-xl mx-auto">
+      <p class="font-serif text-base sm:text-lg font-light italic text-sec max-w-xl mx-auto">
         Cada resultado alimentado por la entropía de tu cursor
       </p>
     </div>
 
     <!-- Tool cards grid -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
       {tools.map((tool, i) => (
         <a
           href={tool.slug}
-          class={`spotlight-card group block bg-card border rounded-sm p-7 transition-all duration-300 hover:-translate-y-1 animate-float-up ${colorMap[tool.color]}`}
+          class={`spotlight-card group block bg-card border rounded-sm p-5 sm:p-7 transition-all duration-300 hover:-translate-y-1 animate-float-up ${colorMap[tool.color]}`}
           style={`animation-delay: ${i * 80}ms`}
           data-hover
         >
           <!-- Header row -->
-          <div class="flex items-start justify-between mb-5">
+          <div class="flex items-start justify-between mb-4">
             <div>
               <span class="font-mono text-[9px] tracking-[.2em] uppercase text-muted block mb-1.5">
                 {tool.id}
@@ -137,8 +137,8 @@ const textColorMap: Record<string, string> = {
                 </span>
               ))}
             </div>
-            <span class={`font-mono text-sm ${textColorMap[tool.color]} opacity-0 group-hover:opacity-100 transition-opacity duration-200`}>
-              →
+            <span class={`font-mono text-xs ${textColorMap[tool.color]} opacity-0 group-hover:opacity-100 transition-all duration-200 flex items-center gap-1`}>
+              Jugar <span>→</span>
             </span>
           </div>
         </a>

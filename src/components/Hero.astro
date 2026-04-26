@@ -3,13 +3,13 @@
 ---
 
 <!-- ─── HERO ──────────────────────────────────────────────── -->
-<section class="relative min-h-screen flex flex-col items-center justify-center overflow-hidden px-6">
+<section class="relative min-h-screen flex flex-col items-center justify-center overflow-hidden px-4 sm:px-6">
 
-  <!-- Background decorative rings -->
-  <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
-    <div class="w-[600px] h-[600px] rounded-full border border-gold/5 animate-spin-slow"></div>
-    <div class="absolute w-[400px] h-[400px] rounded-full border border-gold/8" style="animation: spin-slow 14s linear infinite reverse;"></div>
-    <div class="absolute w-[200px] h-[200px] rounded-full border border-amber/10"></div>
+  <!-- Background decorative rings (hidden on small screens) -->
+  <div class="absolute inset-0 flex items-center justify-center pointer-events-none hidden sm:flex">
+    <div class="w-[min(600px,90vw)] h-[min(600px,90vw)] rounded-full border border-gold/5 animate-spin-slow"></div>
+    <div class="absolute w-[min(400px,65vw)] h-[min(400px,65vw)] rounded-full border border-gold/8" style="animation: spin-slow 14s linear infinite reverse;"></div>
+    <div class="absolute w-[min(200px,40vw)] h-[min(200px,40vw)] rounded-full border border-amber/10"></div>
   </div>
 
   <!-- Glowing orb -->
@@ -17,18 +17,16 @@
        style="background: radial-gradient(circle, rgba(212,168,67,.07) 0%, transparent 70%); filter: blur(40px);"></div>
 
   <!-- Nav -->
-  <nav class="absolute top-0 left-0 right-0 flex items-center justify-between px-8 py-6 z-10">
-    <div class="flex items-center gap-3">
-      <span class="text-2xl">⟆</span>
-      <span class="font-display text-xl tracking-widest text-gold uppercase">Azar</span>
+  <nav class="absolute top-0 left-0 right-0 flex items-center justify-between px-4 sm:px-8 py-5 z-10">
+    <div class="flex items-center gap-2 sm:gap-3">
+      <span class="text-xl sm:text-2xl">⟆</span>
+      <span class="font-display text-lg sm:text-xl tracking-widest text-gold uppercase">Azar</span>
     </div>
     <div class="hidden md:flex items-center gap-8">
-      <a href="#tools"   class="font-mono text-xs tracking-widest uppercase text-muted hover:text-gold transition-colors duration-200" data-hover>Herramientas</a>
+      <a href="#tools"   class="font-mono text-xs tracking-widest uppercase text-muted hover:text-gold transition-colors duration-200" data-hover>Juegos</a>
       <a href="#entropy" class="font-mono text-xs tracking-widest uppercase text-muted hover:text-gold transition-colors duration-200" data-hover>Entropía</a>
     </div>
-    <div class="font-mono text-xs text-muted border border-gold/10 px-3 py-1.5 rounded-sm">
-      100% Frontend
-    </div>
+    <!-- Intentionally no right element to avoid overlapping entropy HUD -->
   </nav>
 
   <!-- Main headline -->
@@ -51,17 +49,17 @@
       Sin servidores. Sin backend. Todo en tu navegador.
     </p>
 
-    <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mt-12 animate-float-up delay-400">
+    <div class="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 mt-10 sm:mt-12 animate-float-up delay-400">
       <a href="#tools" data-hover
-         class="inline-flex items-center gap-3 font-mono text-xs tracking-widest uppercase bg-gold text-void px-8 py-4 rounded-sm font-medium hover:bg-amber transition-colors duration-200"
-         style="box-shadow: 0 0 0 0 rgba(212,168,67,0); transition: background .2s, box-shadow .3s;"
+         class="inline-flex items-center gap-3 font-mono text-xs tracking-widest uppercase bg-gold text-void px-6 sm:px-8 py-4 rounded-sm font-medium hover:bg-amber transition-colors duration-200 w-full sm:w-auto justify-center"
+         style="transition: background .2s, box-shadow .3s;"
          onmouseenter="this.style.boxShadow='0 0 30px rgba(212,168,67,.35)'"
          onmouseleave="this.style.boxShadow='0 0 0 0 rgba(212,168,67,0)'">
-        Explorar herramientas
+        Ver los juegos
         <span>↓</span>
       </a>
       <a href="#entropy" data-hover
-         class="inline-flex items-center gap-3 font-mono text-xs tracking-widest uppercase border border-gold/15 text-sec px-8 py-4 rounded-sm hover:border-gold/40 hover:text-gold transition-colors duration-200">
+         class="inline-flex items-center gap-3 font-mono text-xs tracking-widest uppercase border border-gold/15 text-sec px-6 sm:px-8 py-4 rounded-sm hover:border-gold/40 hover:text-gold transition-colors duration-200 w-full sm:w-auto justify-center">
         ¿Cómo funciona?
       </a>
     </div>
@@ -74,125 +72,154 @@
   </div>
 </section>
 
-<!-- ─── ENTROPY EXPLANATION ──────────────────────────────── -->
-<section id="entropy" class="py-24 px-6">
+<!-- ─── ENTROPY EXPLANATION ────────────────────────────────── -->
+<section id="entropy" class="py-16 sm:py-24 px-4 sm:px-6">
   <div class="max-w-5xl mx-auto">
 
-    <div class="flex items-center gap-4 mb-16">
+    <!-- ── Section label ── -->
+    <div class="flex items-center gap-4 mb-10">
       <div class="flex-1 h-px bg-gradient-to-r from-transparent via-gold/15 to-transparent"></div>
       <span class="font-mono text-[10px] tracking-[0.25em] uppercase text-muted">El Motor</span>
       <div class="flex-1 h-px bg-gradient-to-r from-transparent via-gold/15 to-transparent"></div>
     </div>
 
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-      <div>
-        <h2 class="font-display text-[clamp(2.5rem,6vw,5rem)] leading-none text-prim mb-6">
-          ENTROPÍA<br/>
-          <span class="text-gold">DEL CURSOR</span>
-        </h2>
-        <p class="font-serif text-lg font-light text-sec leading-relaxed mb-4">
-          Mientras mueves el ratón, capturamos la impredecibilidad de tus movimientos —
-          velocidad, timing, posición — para construir una semilla de aleatoriedad única.
-        </p>
-        <p class="font-serif text-base font-light italic text-muted leading-relaxed">
-          "La verdadera aleatoriedad nace del caos. Tu cursor es el caos."
+    <!-- ── Centered title spanning full width ── -->
+    <div class="text-center mb-12">
+      <h2 class="font-display text-[clamp(3rem,8vw,7rem)] leading-none text-prim">
+        ENTROPÍA <span class="text-gold">DEL CURSOR</span>
+      </h2>
+    </div>
+
+    <!-- ── Two equal columns ── -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-10">
+
+      <!-- Left: description + quote + live seed display -->
+      <div class="flex flex-col justify-center gap-6">
+        <p class="font-serif text-lg font-light text-sec leading-relaxed">
+          Mientras interactúas, capturamos la impredecibilidad de tus movimientos (velocidad,
+          timing, posición) y la mezclamos criptográficamente con el reloj de la máquina.
+          <strong>Caos humano + Entropía digital.</strong>
         </p>
 
-        <div class="mt-8 space-y-3">
-          {[
-            ['⟆', 'Movimiento XY', 'Coordenadas en tiempo real'],
-            ['◈', 'Delta temporal', 'Microsegundos entre eventos'],
-            ['◉', 'Velocidad', 'Aceleración e inercia del cursor'],
-          ].map(([icon, title, desc]) => (
-            <div class="flex items-start gap-4 p-4 bg-card/50 border border-gold/8 rounded-sm">
-              <span class="text-gold font-mono text-lg mt-0.5">{icon}</span>
-              <div>
-                <div class="font-mono text-xs tracking-widest uppercase text-prim mb-1">{title}</div>
-                <div class="font-mono text-xs text-muted">{desc}</div>
-              </div>
-            </div>
-          ))}
+        <blockquote class="border-l-2 border-gold/30 pl-5">
+          <p class="font-serif text-base italic text-muted leading-relaxed">
+            "La verdadera aleatoriedad nace del caos.<br/>Tu cursor es el caos."
+          </p>
+        </blockquote>
+
+        <!-- Live seed preview -->
+        <div class="bg-card/60 border border-gold/10 rounded-sm p-5">
+          <div class="font-mono text-[10px] tracking-widest uppercase text-muted mb-3">
+            Semilla activa
+          </div>
+          <div id="hero-seed-display"
+               class="font-mono text-xs text-gold/80 leading-relaxed break-all"
+               style="font-size: 11px; letter-spacing: .05em;">
+            Esperando interacción...
+          </div>
+          <div class="mt-3 flex items-center gap-2">
+            <div class="w-1.5 h-1.5 rounded-full bg-muted" id="hero-seed-dot"></div>
+            <span class="font-mono text-[9px] text-muted tracking-widest uppercase"
+                  id="hero-seed-status">Sin actividad</span>
+          </div>
         </div>
       </div>
 
-      <!-- Live entropy visualizer -->
-      <div class="relative">
-        <div class="bg-card border border-gold/10 rounded-sm p-8 relative overflow-hidden">
+      <!-- Right: live entropy visualizer card (same height via flex) -->
+      <div class="flex flex-col">
+        <div class="bg-card border border-gold/10 rounded-sm p-6 relative overflow-hidden flex-1 flex flex-col">
           <div class="absolute inset-0 pointer-events-none"
-               style="background: radial-gradient(ellipse at 50% 0%, rgba(212,168,67,.04) 0%, transparent 60%);">
+               style="background: radial-gradient(ellipse at 50% 0%, rgba(212,168,67,.05) 0%, transparent 60%);">
           </div>
 
-          <div class="font-mono text-[10px] tracking-widest uppercase text-muted mb-4">Pool de Entropía — En Vivo</div>
+          <div class="font-mono text-[10px] tracking-widest uppercase text-muted mb-4 relative z-10">
+            Pool de Entropía — En Vivo
+          </div>
 
           <!-- Entropy pool visual grid -->
-          <div id="entropy-grid" class="grid gap-1 mb-6" style="grid-template-columns: repeat(16, 1fr);">
+          <div id="entropy-grid" class="grid gap-1 mb-5 relative z-10"
+               style="grid-template-columns: repeat(16, 1fr);">
             {Array.from({length: 64}, (_, i) => (
               <div class="entropy-cell h-2 rounded-full bg-elevated transition-all duration-300" data-idx={i}></div>
             ))}
           </div>
 
-          <div class="space-y-3">
-            <div class="flex justify-between items-center">
-              <span class="font-mono text-xs text-muted">Entropía acumulada</span>
-              <span id="hero-entropy-val" class="font-display text-2xl text-gold">0%</span>
+          <!-- Signal bar -->
+          <div class="space-y-2 relative z-10 mt-auto">
+            <div class="flex justify-between items-baseline">
+              <span class="font-mono text-[10px] text-muted">Señal de entropía</span>
+              <span id="hero-entropy-val" class="font-display text-3xl text-gold">8%</span>
             </div>
-            <div class="h-0.5 bg-elevated rounded-full overflow-hidden">
-              <div id="hero-entropy-fill" class="h-full rounded-full transition-all duration-300"
-                   style="width:0%; background: linear-gradient(90deg, var(--color-violet), var(--color-gold));"></div>
+            <div class="h-1 bg-elevated rounded-full overflow-hidden">
+              <div id="hero-entropy-fill" class="h-full rounded-full transition-none"
+                   style="width:8%; background: linear-gradient(90deg, var(--color-violet), var(--color-gold), var(--color-amber));"></div>
             </div>
-            <div class="flex justify-between font-mono text-[10px] text-muted">
-              <span>Frío</span>
-              <span id="entropy-state">Mueve el cursor →</span>
-              <span>Cargado</span>
-            </div>
-          </div>
-
-          <div class="mt-6 pt-6 border-t border-gold/8">
-            <div class="font-mono text-[10px] tracking-widest uppercase text-muted mb-3">Último valor generado</div>
-            <div id="last-random" class="font-display text-4xl text-amber" style="text-shadow: 0 0 20px rgba(245,200,66,.3);">
-              —
+            <div class="flex justify-between font-mono text-[9px] text-muted">
+              <span>Reposo</span>
+              <span id="entropy-state">Interactúa →</span>
+              <span>Activo</span>
             </div>
           </div>
         </div>
       </div>
     </div>
+
+    <!-- ── 3-col feature grid (symmetric, full width) ── -->
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      {[
+        { icon: '⟆', label: 'Movimiento XY',   desc: 'Coordenadas en tiempo real' },
+        { icon: '◈', label: 'Delta Temporal',  desc: 'Microsegundos entre eventos' },
+        { icon: '◉', label: 'Velocidad',        desc: 'Aceleración e inercia' },
+      ].map(item => (
+        <div class="flex items-center gap-4 p-5 bg-card/50 border border-gold/8 rounded-sm">
+          <span class="text-gold font-mono text-xl shrink-0">{item.icon}</span>
+          <div>
+            <div class="font-mono text-[10px] tracking-widest uppercase text-prim mb-1">{item.label}</div>
+            <div class="font-mono text-[10px] text-muted">{item.desc}</div>
+          </div>
+        </div>
+      ))}
+    </div>
+
   </div>
 </section>
 
+
 <script>
-  // Sync entropy UI in this section
-  function updateHeroEntropy() {
-    const azarRandom = (window as any).azarRandom;
-    const pool = (window as any).azarPool as Uint32Array;
-    if (!pool) { requestAnimationFrame(updateHeroEntropy); return; }
+  // Hero entropy visualizer — reads live signal every frame
+  const bar   = document.getElementById('entropy-bar')!;
+  const fill  = document.getElementById('hero-entropy-fill')!;
+  const val   = document.getElementById('hero-entropy-val')!;
+  const st    = document.getElementById('entropy-state')!;
+  const cells = document.querySelectorAll<HTMLElement>('.entropy-cell');
 
-    const cells = document.querySelectorAll<HTMLElement>('.entropy-cell');
-    cells.forEach((cell, i) => {
-      const v = (pool[i % pool.length] >>> 0) / 4294967296;
-      const intensity = Math.round(v * 100);
-      cell.style.opacity = (0.1 + v * 0.9).toString();
-      cell.style.background = v > 0.7
-        ? 'var(--color-gold)'
-        : v > 0.4
-          ? 'var(--color-violet)'
-          : 'var(--color-elevated)';
-    });
+  let cellFrame = 0;
+  function heroLoop() {
+    const sig = (window as any).azarSignal as number ?? 0.12;
+    const pct = sig * 100;
 
-    requestAnimationFrame(updateHeroEntropy);
-  }
-  updateHeroEntropy();
-
-  // Mirror entropy bar values
-  document.addEventListener('mousemove', () => {
-    const bar  = document.getElementById('entropy-bar')!;
-    const fill = document.getElementById('hero-entropy-fill')!;
-    const val  = document.getElementById('hero-entropy-val')!;
-    const st   = document.getElementById('entropy-state')!;
-    const pct  = parseFloat(bar.style.width) || 0;
-    fill.style.width = pct + '%';
+    fill.style.width = pct.toFixed(2) + '%';
     val.textContent  = pct.toFixed(1) + '%';
-    if (pct > 60) st.textContent = '⚡ Cargado';
-    else if (pct > 20) st.textContent = 'Acumulando...';
-    else st.textContent = 'Mueve el cursor →';
-  });
+
+    if (pct > 65)      st.textContent = '⚡ Activo';
+    else if (pct > 30) st.textContent = 'Detectando...';
+    else               st.textContent = 'Interactúa →';
+
+    // Update pool cells at 6fps (every ~10 frames)
+    cellFrame++;
+    if (cellFrame % 10 === 0) {
+      const pool = (window as any).azarPool as Uint32Array;
+      if (pool) {
+        cells.forEach((cell, i) => {
+          const v = (pool[i % pool.length] >>> 0) / 4294967296;
+          cell.style.opacity    = (0.1 + v * 0.9).toFixed(2);
+          cell.style.background = v > 0.7 ? 'var(--color-gold)'
+            : v > 0.4 ? 'var(--color-violet)' : 'var(--color-elevated)';
+        });
+      }
+    }
+
+    requestAnimationFrame(heroLoop);
+  }
+  requestAnimationFrame(heroLoop);
 </script>

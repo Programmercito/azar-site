@@ -7,45 +7,81 @@ interface Props {
   toolId: string;
   toolName: string;
   toolSubtitle: string;
+  toolIcon?: string;
 }
 
-const { title, seoDescription, toolId, toolName, toolSubtitle } = Astro.props;
+const { title, seoDescription, toolId, toolName, toolSubtitle, toolIcon = '⟆' } = Astro.props;
 ---
 
 <Layout title={title} description={seoDescription}>
-  <!-- Back nav -->
-  <nav class="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-4"
-       style="background: linear-gradient(180deg, rgba(8,8,16,.95) 0%, transparent 100%);">
+
+  <!-- ── Minimal sticky top nav ── -->
+  <header id="tool-nav"
+          class="fixed top-0 left-0 right-0 z-50 px-4 sm:px-6 py-3 flex items-center justify-between transition-all duration-300"
+          style="background: rgba(8,8,16,0);">
     <a href="/" data-hover
-       class="flex items-center gap-2 font-mono text-[10px] tracking-[.15em] uppercase text-muted hover:text-gold transition-colors duration-200">
-      ← Volver
+       class="flex items-center gap-2 font-mono text-[10px] tracking-[.15em] uppercase text-muted hover:text-gold transition-colors duration-200 touch-target">
+      <span class="text-gold">←</span> Juegos
     </a>
-    <div class="flex items-center gap-2">
-      <span class="font-mono text-[9px] tracking-[.2em] uppercase text-muted">{toolId}</span>
-      <span class="font-display text-xl tracking-wider text-gold">{toolName}</span>
-    </div>
-    <div class="font-mono text-[9px] text-muted hidden sm:block">⟆ Azar</div>
-  </nav>
 
-  <!-- Tool content -->
-  <main class="min-h-screen pt-20 pb-16 px-6 flex flex-col items-center">
-    <!-- Page title -->
-    <div class="w-full max-w-2xl text-center mb-10 pt-6">
-      <p class="font-mono text-[10px] tracking-[.25em] uppercase text-muted mb-2">{toolId}</p>
-      <h1 class="font-display text-[clamp(3.5rem,10vw,7rem)] leading-none text-prim">{toolName}</h1>
-      <p class="font-serif italic text-sec text-lg mt-2">{toolSubtitle}</p>
+    <!-- Tool name — only visible after scroll -->
+    <div id="nav-title"
+         class="flex items-center gap-2 opacity-0 translate-y-1 transition-all duration-300 pointer-events-none">
+      <span class="font-mono text-[9px] tracking-[.2em] text-muted">{toolId}</span>
+      <span class="font-display text-lg tracking-wider text-gold">{toolName}</span>
     </div>
 
-    <!-- Tool slot -->
+    <div class="font-mono text-[9px] text-muted/50 hidden sm:block">⟆ Azar</div>
+  </header>
+
+  <!-- ── Hero section that scrolls away ── -->
+  <div id="tool-hero" class="pt-16 pb-8 px-4 sm:px-6 text-center">
+    <p class="font-mono text-[10px] tracking-[.3em] uppercase text-muted mb-3">{toolId}</p>
+    <h1 class="font-display text-[clamp(4rem,14vw,9rem)] leading-none text-prim mb-2">{toolName}</h1>
+    <p class="font-serif italic text-sec text-base sm:text-lg">{toolSubtitle}</p>
+    <div class="mt-4 flex justify-center">
+      <div class="h-px w-16" style="background: linear-gradient(90deg, transparent, rgba(212,168,67,.35), transparent)"></div>
+    </div>
+  </div>
+
+  <!-- ── Tool content ── -->
+  <main class="pb-16 px-4 sm:px-6 flex flex-col items-center">
     <div class="w-full max-w-2xl">
       <slot />
     </div>
   </main>
 
-  <!-- Minimal footer -->
-  <footer class="border-t border-gold/8 py-8 px-6 text-center">
+  <!-- ── Footer ── -->
+  <footer class="border-t border-gold/8 py-8 px-4 sm:px-6 text-center">
     <span class="font-mono text-[10px] text-muted tracking-widest">
       ⟆ Azar · 100% Frontend · Entropía del cursor
     </span>
   </footer>
+
+  <script>
+    // Show nav title + darken nav background on scroll
+    const nav      = document.getElementById('tool-nav')!;
+    const navTitle = document.getElementById('nav-title')!;
+    const hero     = document.getElementById('tool-hero')!;
+
+    const observer = new IntersectionObserver(entries => {
+      const heroVisible = entries[0].isIntersecting;
+      // When hero is NOT visible → show nav title + darken bg
+      if (!heroVisible) {
+        nav.style.background       = 'rgba(8,8,16,.92)';
+        nav.style.borderBottom     = '1px solid rgba(212,168,67,.08)';
+        navTitle.style.opacity     = '1';
+        navTitle.style.transform   = 'translateY(0)';
+        navTitle.style.pointerEvents = 'auto';
+      } else {
+        nav.style.background       = 'rgba(8,8,16,0)';
+        nav.style.borderBottom     = 'none';
+        navTitle.style.opacity     = '0';
+        navTitle.style.transform   = 'translateY(4px)';
+        navTitle.style.pointerEvents = 'none';
+      }
+    }, { threshold: 0 });
+
+    observer.observe(hero);
+  </script>
 </Layout>
