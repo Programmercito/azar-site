@@ -164,18 +164,19 @@
       </div>
     </div>
 
-    <!-- ── 3-col feature grid (symmetric, full width) ── -->
-    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+    <!-- ── 4-col feature grid (symmetric, full width) ── -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
       {[
-        { icon: '⟆', label: 'Movimiento XY',   desc: 'Coordenadas en tiempo real' },
-        { icon: '◈', label: 'Delta Temporal',  desc: 'Microsegundos entre eventos' },
-        { icon: '◉', label: 'Velocidad',        desc: 'Aceleración e inercia' },
+        { icon: '⟆', label: 'Movimiento XY',   desc: 'Coordenadas y aceleración' },
+        { icon: '📱', label: 'Sensores Móviles',desc: 'Acelerómetro y taps exactos' },
+        { icon: '〰', label: 'Ruido Térmico',   desc: 'Fluctuaciones de CPU en reposo' },
+        { icon: '🛡️', label: 'Red de Seguridad',desc: 'Fusión con entropía nativa' },
       ].map(item => (
-        <div class="flex items-center gap-4 p-5 bg-card/50 border border-gold/8 rounded-sm">
-          <span class="text-gold font-mono text-xl shrink-0">{item.icon}</span>
+        <div class="flex items-start gap-4 p-5 bg-card/50 border border-gold/8 rounded-sm">
+          <span class="text-gold font-mono text-xl shrink-0 mt-0.5">{item.icon}</span>
           <div>
             <div class="font-mono text-[10px] tracking-widest uppercase text-prim mb-1">{item.label}</div>
-            <div class="font-mono text-[10px] text-muted">{item.desc}</div>
+            <div class="font-mono text-[10px] text-muted leading-relaxed">{item.desc}</div>
           </div>
         </div>
       ))}

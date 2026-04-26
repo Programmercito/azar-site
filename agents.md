@@ -107,6 +107,12 @@ window.azarSignal: number         // Señal de entropía en vivo [0, 1) — sól
 | **Pool interno** | `pool` (Uint32Array×256) | Calidad del RNG. Se alimenta con XOR de todos los eventos y jitter de RAF. Siempre acumula. |
 | **Señal visual** | `signal` [0.08–0.91] | Lo que se muestra en el HUD. Modelo de **decaimiento multiplicativo**: sube con interacción, cae cuando el usuario para. |
 
+### Fuentes de Entropía
+- **Escritorio Activo:** Coordenadas XY del ratón, velocidad del movimiento.
+- **Móvil:** Eventos touch (`touchstart`, `touchmove`, `click`) capturan coordenadas y tiempos exactos. Acelerómetro (`devicemotion`) captura las micro-vibraciones de las manos del usuario sosteniendo el teléfono.
+- **En Reposo (Idle):** Jitter térmico de CPU. El loop `requestAnimationFrame` mide la diferencia de tiempo en milisegundos entre frames. Como el CPU y el OS causan fluctuaciones (ej. 16.662ms vs 16.671ms), estas variaciones microscópicas generan entropía constante incluso si no se toca la pantalla.
+- **Red de Seguridad:** Finalmente, `azarRandom()` mezcla el resultado con `Math.random()` del navegador.
+
 ### Modelo de decaimiento (signal)
 
 ```

@@ -1,5 +1,5 @@
 ---
-import '../styles/global.css';
+import "../styles/global.css";
 
 interface Props {
   title?: string;
@@ -7,8 +7,8 @@ interface Props {
 }
 
 const {
-  title = 'Azar — Juegos del Azar',
-  description = 'Juegos de aleatoriedad potenciados por entropía real. Sorteos, dados, cartas y más — todo calculado en tu navegador.'
+  title = "Azar — Juegos del Azar",
+  description = "Juegos de aleatoriedad potenciados por entropía real. Sorteos, dados, cartas y más — todo calculado en tu navegador.",
 } = Astro.props;
 ---
 
@@ -22,15 +22,28 @@ const {
     <title>{title}</title>
     <meta name="description" content={description} />
     <meta name="theme-color" content="#080810" />
+    <meta name="robots" content="index, follow" />
+    <meta name="author" content="Devcito" />
+
+    <!-- OpenGraph -->
+    <meta property="og:type" content="website" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
-    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Azar by Devcito" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:creator" content="@devcito" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,700;1,300;1,400&family=DM+Mono:wght@300;400;500&family=Bebas+Neue&display=swap" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,700;1,300;1,400&family=DM+Mono:wght@300;400;500&family=Bebas+Neue&display=swap"
+    />
   </head>
   <body>
-
     <!-- Entropy bar top (1px line) -->
     <div id="entropy-bar"></div>
 
@@ -39,7 +52,6 @@ const {
       <div id="entropy-pulse"></div>
       <div>
         <div id="entropy-label">ENTROPÍA</div>
-        <div id="entropy-val">8.0%</div>
         <div id="entropy-hex">0x000000</div>
       </div>
     </div>
@@ -50,18 +62,39 @@ const {
 
     <slot />
 
+    <!-- Global Footer -->
+    <footer
+      class="py-10 text-center relative z-10 border-t border-gold/10 bg-void"
+    >
+      <p class="font-mono text-xs tracking-widest text-muted">
+        Hecho con <span class="text-crimson">❤️</span> por
+        <a
+          href="https://devcito.org"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="text-gold hover:text-amber hover:underline underline-offset-4 transition-colors"
+        >
+          Devcito
+        </a>
+      </p>
+    </footer>
+
     <script>
       // ═══════════════════════════════════════════════════
       //  ENTROPY POOL — for RNG quality (internal, grows silently)
       // ═══════════════════════════════════════════════════
       const POOL_SIZE = 256;
-      const pool      = new Uint32Array(POOL_SIZE);
-      let poolIdx     = 0;
+      const pool = new Uint32Array(POOL_SIZE);
+      let poolIdx = 0;
 
-      try { crypto.getRandomValues(pool); } catch {}
+      try {
+        crypto.getRandomValues(pool);
+      } catch {}
 
       function xorMix(a: number): number {
-        a ^= a << 13; a ^= a >> 17; a ^= a << 5;
+        a ^= a << 13;
+        a ^= a >> 17;
+        a ^= a << 5;
         return a >>> 0;
       }
 
@@ -80,25 +113,25 @@ const {
       //   idle:   signal halves every ~1.4s  (DECAY_K^60 ≈ 0.22)
       //   active: each mousemove pixel adds ~0.45%, fast swipe → +30%+
       // This ensures it moves visibly: high while moving, drops when stopped.
-      const FLOOR   = 0.08;    // idle rest (~8%)
-      const CEILING = 0.91;    // hard cap (never 100%)
-      const DECAY_K = 0.975;   // per-frame multiplier toward floor
-      let   signal  = FLOOR;
+      const FLOOR = 0.08; // idle rest (~8%)
+      const CEILING = 0.91; // hard cap (never 100%)
+      const DECAY_K = 0.975; // per-frame multiplier toward floor
+      let signal = FLOOR;
 
       function boostSignal(amount: number) {
         signal = Math.min(CEILING, signal + amount);
       }
 
-      let lastRaf  = performance.now();
+      let lastRaf = performance.now();
       let rafCount = 0;
       function rafLoop() {
-        const now  = performance.now();
+        const now = performance.now();
         const diff = now - lastRaf;
-        lastRaf    = now;
+        lastRaf = now;
 
         // Feed pool from timing jitter (always free entropy for RNG)
         feedPool((diff * 100000) | 0);
-        feedPool((now  * 10000)  | 0);
+        feedPool((now * 10000) | 0);
 
         // Decay: signal approaches FLOOR exponentially
         signal = Math.max(FLOOR, signal * DECAY_K + FLOOR * (1 - DECAY_K));
@@ -110,55 +143,77 @@ const {
       requestAnimationFrame(rafLoop);
 
       // ── Input events ───────────────────────────────────
-      document.addEventListener('mousemove', e => {
-        const speed = Math.hypot(e.movementX, e.movementY);
-        boostSignal(speed * 0.0045);   // fast swipe → big spike
-        feedPool((e.movementX * 137 + e.movementY * 59) | 0);
-        feedPool((e.clientX ^ (e.clientY << 8)) | 0);
-      }, { passive: true });
+      document.addEventListener(
+        "mousemove",
+        (e) => {
+          const speed = Math.hypot(e.movementX, e.movementY);
+          boostSignal(speed * 0.0045); // fast swipe → big spike
+          feedPool((e.movementX * 137 + e.movementY * 59) | 0);
+          feedPool((e.clientX ^ (e.clientY << 8)) | 0);
+        },
+        { passive: true },
+      );
 
-      document.addEventListener('touchmove', e => {
-        const t = e.touches[0];
-        boostSignal(0.05);
-        feedPool((t.clientX * 17 + t.clientY * 31) | 0);
-        feedPool((performance.now() * 100) | 0);
-      }, { passive: true });
+      document.addEventListener(
+        "touchmove",
+        (e) => {
+          const t = e.touches[0];
+          boostSignal(0.05);
+          feedPool((t.clientX * 17 + t.clientY * 31) | 0);
+          feedPool((performance.now() * 100) | 0);
+        },
+        { passive: true },
+      );
 
-      document.addEventListener('touchstart', () => {
-        boostSignal(0.09);
-        feedPool((performance.now() | 0));
-      }, { passive: true });
+      document.addEventListener(
+        "touchstart",
+        () => {
+          boostSignal(0.09);
+          feedPool(performance.now() | 0);
+        },
+        { passive: true },
+      );
 
-      document.addEventListener('click', e => {
-        boostSignal(0.07);
-        feedPool((e.clientX * 7 + e.clientY * 11) | 0);
-      }, { passive: true });
+      document.addEventListener(
+        "click",
+        (e) => {
+          boostSignal(0.07);
+          feedPool((e.clientX * 7 + e.clientY * 11) | 0);
+        },
+        { passive: true },
+      );
 
-      if ('DeviceMotionEvent' in window) {
-        window.addEventListener('devicemotion', e => {
-          const a = e.acceleration;
-          if (!a) return;
-          const mag = Math.abs(a.x ?? 0) + Math.abs(a.y ?? 0) + Math.abs(a.z ?? 0);
-          boostSignal(mag * 0.006);
-          feedPool((mag * 1000) | 0);
-        }, { passive: true });
+      if ("DeviceMotionEvent" in window) {
+        window.addEventListener(
+          "devicemotion",
+          (e) => {
+            const a = e.acceleration;
+            if (!a) return;
+            const mag =
+              Math.abs(a.x ?? 0) + Math.abs(a.y ?? 0) + Math.abs(a.z ?? 0);
+            boostSignal(mag * 0.006);
+            feedPool((mag * 1000) | 0);
+          },
+          { passive: true },
+        );
       }
 
       // ── HUD update ─────────────────────────────────────
-      // Shows live % + hex slice from pool — looks like real computation
+      // Shows live hex slice from pool — looks like real computation
       function updateHUD() {
-        const pct    = signal * 100;
+        const pct = signal * 100;
         // Live hex from pool — changes every update showing active computation
-        const hexVal = ((pool[poolIdx % POOL_SIZE] >>> 0) & 0xFFFFFF)
-                         .toString(16).toUpperCase().padStart(6, '0');
-        const bar    = document.getElementById('entropy-bar')!;
-        const val    = document.getElementById('entropy-val')!;
-        const hex    = document.getElementById('entropy-hex');
-        const badge  = document.getElementById('entropy-badge')!;
-        bar.style.width       = pct.toFixed(2) + '%';
-        val.textContent       = pct.toFixed(1) + '%';
-        if (hex) hex.textContent = '0x' + hexVal;
-        badge.dataset.charged = pct > 40 ? '1' : '0';
+        const hexVal = ((pool[poolIdx % POOL_SIZE] >>> 0) & 0xffffff)
+          .toString(16)
+          .toUpperCase()
+          .padStart(6, "0");
+        const bar = document.getElementById("entropy-bar")!;
+        const hex = document.getElementById("entropy-hex");
+        const badge = document.getElementById("entropy-badge")!;
+
+        bar.style.width = pct.toFixed(2) + "%";
+        if (hex) hex.textContent = "0x" + hexVal;
+        badge.dataset.charged = pct > 40 ? "1" : "0";
       }
 
       // ── azarRandom: public API ─────────────────────────
@@ -166,47 +221,55 @@ const {
         let s = 0;
         const t = (performance.now() * 10000) | 0;
         for (let i = 0; i < 8; i++) s ^= pool[(poolIdx + i) % POOL_SIZE];
-        s ^= t; s ^= (t >>> 16);
+        s ^= t;
+        s ^= t >>> 16;
         s = xorMix(s);
         pool[poolIdx % POOL_SIZE] = s;
         poolIdx = (poolIdx + 1) % POOL_SIZE;
-        
+
         // Convert signed 32-bit integer to unsigned, then divide by 2^32 (4294967296)
         // to normalize the value to a float between 0.0 (inclusive) and 1.0 (exclusive)
         const humanEntropy = (s >>> 0) / 4294967296;
         // Machine entropy from the browser's PRNG [0, 1)
         const machineEntropy = Math.random();
-        
+
         // Blend them securely: modulo 1 addition preserves uniform distribution
         return (humanEntropy + machineEntropy) % 1;
       }
 
       (window as any).azarRandom = azarRandom;
-      (window as any).azarPool   = pool;
+      (window as any).azarPool = pool;
       // Expose live signal level for visualizers
-      Object.defineProperty(window, 'azarSignal', { get: () => signal });
+      Object.defineProperty(window, "azarSignal", { get: () => signal });
 
       // ═══════════════════════════════════════════════════
       //  CURSOR — GPU-accelerated via transform3d
       // ═══════════════════════════════════════════════════
-      const dot  = document.getElementById('cursor-dot')!;
-      const ring = document.getElementById('cursor-ring')!;
-      const isMobile = window.matchMedia('(pointer: coarse)').matches;
+      const dot = document.getElementById("cursor-dot")!;
+      const ring = document.getElementById("cursor-ring")!;
+      const isMobile = window.matchMedia("(pointer: coarse)").matches;
 
       if (dot && ring && !isMobile) {
-        document.documentElement.style.cursor = 'none';
-        dot.style.display  = 'block';
-        ring.style.display = 'block';
+        document.documentElement.style.cursor = "none";
+        dot.style.display = "block";
+        ring.style.display = "block";
 
-        let mx = 0, my = 0; // raw mouse
-        let rx = 0, ry = 0; // ring lerp
+        let mx = 0,
+          my = 0; // raw mouse
+        let rx = 0,
+          ry = 0; // ring lerp
         let rafId: number;
 
-        document.addEventListener('mousemove', e => {
-          mx = e.clientX; my = e.clientY;
-          // Dot follows instantly (no lerp)
-          dot.style.transform = `translate3d(${mx}px,${my}px,0) translate(-50%,-50%)`;
-        }, { passive: true });
+        document.addEventListener(
+          "mousemove",
+          (e) => {
+            mx = e.clientX;
+            my = e.clientY;
+            // Dot follows instantly (no lerp)
+            dot.style.transform = `translate3d(${mx}px,${my}px,0) translate(-50%,-50%)`;
+          },
+          { passive: true },
+        );
 
         // Ring lerps behind mouse — single RAF loop
         function lerpRing() {
@@ -217,38 +280,61 @@ const {
         }
         lerpRing();
 
-        document.querySelectorAll<HTMLElement>('a, button, [data-hover], input[type="range"]').forEach(el => {
-          el.addEventListener('mouseenter', () => ring.classList.add('hovering'));
-          el.addEventListener('mouseleave', () => ring.classList.remove('hovering'));
-        });
+        document
+          .querySelectorAll<HTMLElement>(
+            'a, button, [data-hover], input[type="range"]',
+          )
+          .forEach((el) => {
+            el.addEventListener("mouseenter", () =>
+              ring.classList.add("hovering"),
+            );
+            el.addEventListener("mouseleave", () =>
+              ring.classList.remove("hovering"),
+            );
+          });
       } else if (dot && ring) {
         // Hide cursor on mobile
-        dot.style.display  = 'none';
-        ring.style.display = 'none';
+        dot.style.display = "none";
+        ring.style.display = "none";
       }
 
       // ═══════════════════════════════════════════════════
       //  SPOTLIGHT — throttled via RAF flag
       // ═══════════════════════════════════════════════════
       let spotlightScheduled = false;
-      const spotlightCards = document.querySelectorAll<HTMLElement>('.spotlight-card');
+      const spotlightCards =
+        document.querySelectorAll<HTMLElement>(".spotlight-card");
 
-      document.addEventListener('mousemove', e => {
-        if (spotlightScheduled) return;
-        spotlightScheduled = true;
-        requestAnimationFrame(() => {
-          spotlightCards.forEach(card => {
-            const r = card.getBoundingClientRect();
-            // Only update if mouse is near the card
-            if (e.clientX >= r.left - 100 && e.clientX <= r.right + 100 &&
-                e.clientY >= r.top  - 100 && e.clientY <= r.bottom + 100) {
-              card.style.setProperty('--mx', ((e.clientX - r.left) / r.width  * 100).toFixed(1) + '%');
-              card.style.setProperty('--my', ((e.clientY - r.top)  / r.height * 100).toFixed(1) + '%');
-            }
+      document.addEventListener(
+        "mousemove",
+        (e) => {
+          if (spotlightScheduled) return;
+          spotlightScheduled = true;
+          requestAnimationFrame(() => {
+            spotlightCards.forEach((card) => {
+              const r = card.getBoundingClientRect();
+              // Only update if mouse is near the card
+              if (
+                e.clientX >= r.left - 100 &&
+                e.clientX <= r.right + 100 &&
+                e.clientY >= r.top - 100 &&
+                e.clientY <= r.bottom + 100
+              ) {
+                card.style.setProperty(
+                  "--mx",
+                  (((e.clientX - r.left) / r.width) * 100).toFixed(1) + "%",
+                );
+                card.style.setProperty(
+                  "--my",
+                  (((e.clientY - r.top) / r.height) * 100).toFixed(1) + "%",
+                );
+              }
+            });
+            spotlightScheduled = false;
           });
-          spotlightScheduled = false;
-        });
-      }, { passive: true });
+        },
+        { passive: true },
+      );
     </script>
   </body>
 </html>
