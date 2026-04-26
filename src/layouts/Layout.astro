@@ -25,17 +25,43 @@ const {
     <meta name="robots" content="index, follow" />
     <meta name="author" content="Devcito" />
 
+    <!-- Canonical URL -->
+    <link rel="canonical" href={new URL(Astro.url.pathname, Astro.site || Astro.url)} />
+
     <!-- OpenGraph -->
     <meta property="og:type" content="website" />
+    <meta property="og:url" content={Astro.url} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:site_name" content="Azar by Devcito" />
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content={Astro.url} />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:creator" content="@devcito" />
+
+    <!-- Structured Data (JSON-LD) -->
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Azar",
+      "url": "https://devcito.org",
+      "description": "Suite de herramientas de aleatoriedad (dados, sorteos, cartas) impulsada por entropía humana real, ejecutada 100% en el navegador.",
+      "applicationCategory": "UtilitiesApplication",
+      "operatingSystem": "All",
+      "author": {
+        "@type": "Organization",
+        "name": "Devcito",
+        "url": "https://devcito.org"
+      },
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    })} />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -114,7 +140,7 @@ const {
       //   active: each mousemove pixel adds ~0.45%, fast swipe → +30%+
       // This ensures it moves visibly: high while moving, drops when stopped.
       const FLOOR = 0.08; // idle rest (~8%)
-      const CEILING = 0.91; // hard cap (never 100%)
+      const CEILING = 1.0; // max 100%
       const DECAY_K = 0.975; // per-frame multiplier toward floor
       let signal = FLOOR;
 

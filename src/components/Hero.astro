@@ -193,6 +193,10 @@
   const val   = document.getElementById('hero-entropy-val')!;
   const st    = document.getElementById('entropy-state')!;
   const cells = document.querySelectorAll<HTMLElement>('.entropy-cell');
+  
+  const seedDisplay = document.getElementById('hero-seed-display')!;
+  const seedStatus  = document.getElementById('hero-seed-status')!;
+  const seedDot     = document.getElementById('hero-seed-dot')!;
 
   let cellFrame = 0;
   function heroLoop() {
@@ -206,17 +210,38 @@
     else if (pct > 30) st.textContent = 'Detectando...';
     else               st.textContent = 'Interactúa →';
 
-    // Update pool cells at 6fps (every ~10 frames)
+    // Update pool cells and seed display at 6fps (every ~10 frames)
     cellFrame++;
     if (cellFrame % 10 === 0) {
       const pool = (window as any).azarPool as Uint32Array;
       if (pool) {
+        // Update grid cells
         cells.forEach((cell, i) => {
           const v = (pool[i % pool.length] >>> 0) / 4294967296;
           cell.style.opacity    = (0.1 + v * 0.9).toFixed(2);
           cell.style.background = v > 0.7 ? 'var(--color-gold)'
             : v > 0.4 ? 'var(--color-violet)' : 'var(--color-elevated)';
         });
+
+        // Update the active seed text
+        let hexString = '';
+        for (let i = 0; i < 4; i++) {
+          hexString += (pool[i] >>> 0).toString(16).padStart(8, '0');
+        }
+        seedDisplay.textContent = '0x' + hexString.toUpperCase();
+
+        // Update the status below the seed
+        if (pct > 20) {
+          seedStatus.textContent = 'RECIBIENDO ENTROPÍA';
+          seedStatus.style.color = 'var(--color-gold)';
+          seedDot.style.background = 'var(--color-amber)';
+          seedDot.style.boxShadow = '0 0 8px rgba(245,200,66,0.6)';
+        } else {
+          seedStatus.textContent = 'REPOSO (RUIDO TÉRMICO)';
+          seedStatus.style.color = 'var(--color-muted)';
+          seedDot.style.background = 'var(--color-muted)';
+          seedDot.style.boxShadow = 'none';
+        }
       }
     }
 
