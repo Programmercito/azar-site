@@ -10,6 +10,10 @@ const {
   title = "Azar — Números Aleatorios Reales y Sorteos Online",
   description = "Generador de números aleatorios reales y juegos al azar. Realiza sorteos online gratis, tira dados o usa nuestra ruleta real con randomización absoluta basada en tu propia entropía.",
 } = Astro.props;
+
+const siteUrl = Astro.site || 'https://azar.devcito.org';
+const canonicalUrl = new URL(Astro.url.pathname, siteUrl).toString();
+const previewImage = new URL('/preview.png', siteUrl).toString();
 ---
 
 <!doctype html>
@@ -26,35 +30,41 @@ const {
     <meta name="author" content="Devcito" />
 
     <!-- Canonical URL -->
-    <link rel="canonical" href={new URL(Astro.url.pathname, Astro.site || Astro.url)} />
+    <link rel="canonical" href={canonicalUrl} />
 
     <!-- OpenGraph -->
     <meta property="og:type" content="website" />
-    <meta property="og:url" content={Astro.url} />
+    <meta property="og:url" content={canonicalUrl} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:site_name" content="Azar by Devcito" />
+    <meta property="og:image" content={previewImage} />
+    <meta property="og:image:alt" content="Azar — Herramientas de aleatoriedad basadas en la entropía del cursor" />
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:url" content={Astro.url} />
+    <meta name="twitter:url" content={canonicalUrl} />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:creator" content="@devcito" />
+    <meta name="twitter:image" content={previewImage} />
+    <meta name="twitter:image:alt" content="Azar — Herramientas de aleatoriedad con cursor entropía" />
+    <link rel="preload" as="image" href="/preview.png" />
 
     <!-- Structured Data (JSON-LD) -->
     <script type="application/ld+json" set:html={JSON.stringify({
       "@context": "https://schema.org",
       "@type": "WebApplication",
       "name": "Azar",
-      "url": "https://devcito.org",
+      "url": siteUrl,
       "description": "Generador de números aleatorios reales y suite de juegos al azar. Herramientas para sorteos online, ruleta real online y dados, con randomización criptográfica humana.",
+      "image": previewImage,
       "applicationCategory": "UtilitiesApplication",
       "operatingSystem": "All",
       "author": {
         "@type": "Organization",
         "name": "Devcito",
-        "url": "https://devcito.org"
+        "url": siteUrl
       },
       "offers": {
         "@type": "Offer",
