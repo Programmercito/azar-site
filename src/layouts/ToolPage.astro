@@ -1,0 +1,51 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+interface Props {
+  title: string;
+  seoDescription: string;
+  toolId: string;
+  toolName: string;
+  toolSubtitle: string;
+}
+
+const { title, seoDescription, toolId, toolName, toolSubtitle } = Astro.props;
+---
+
+<Layout title={title} description={seoDescription}>
+  <!-- Back nav -->
+  <nav class="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-4"
+       style="background: linear-gradient(180deg, rgba(8,8,16,.95) 0%, transparent 100%);">
+    <a href="/" data-hover
+       class="flex items-center gap-2 font-mono text-[10px] tracking-[.15em] uppercase text-muted hover:text-gold transition-colors duration-200">
+      ← Volver
+    </a>
+    <div class="flex items-center gap-2">
+      <span class="font-mono text-[9px] tracking-[.2em] uppercase text-muted">{toolId}</span>
+      <span class="font-display text-xl tracking-wider text-gold">{toolName}</span>
+    </div>
+    <div class="font-mono text-[9px] text-muted hidden sm:block">⟆ Azar</div>
+  </nav>
+
+  <!-- Tool content -->
+  <main class="min-h-screen pt-20 pb-16 px-6 flex flex-col items-center">
+    <!-- Page title -->
+    <div class="w-full max-w-2xl text-center mb-10 pt-6">
+      <p class="font-mono text-[10px] tracking-[.25em] uppercase text-muted mb-2">{toolId}</p>
+      <h1 class="font-display text-[clamp(3.5rem,10vw,7rem)] leading-none text-prim">{toolName}</h1>
+      <p class="font-serif italic text-sec text-lg mt-2">{toolSubtitle}</p>
+    </div>
+
+    <!-- Tool slot -->
+    <div class="w-full max-w-2xl">
+      <slot />
+    </div>
+  </main>
+
+  <!-- Minimal footer -->
+  <footer class="border-t border-gold/8 py-8 px-6 text-center">
+    <span class="font-mono text-[10px] text-muted tracking-widest">
+      ⟆ Azar · 100% Frontend · Entropía del cursor
+    </span>
+  </footer>
+</Layout>

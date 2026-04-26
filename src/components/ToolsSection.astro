@@ -1,0 +1,148 @@
+---
+// Landing grid: each tool card links to its own page
+const tools = [
+  {
+    id: '01',
+    slug: '/sorteo',
+    name: 'SORTEO',
+    subtitle: 'De personas y grupos',
+    icon: '🎲',
+    desc: 'Fisher-Yates shuffle. Selecciona N ganadores o mezcla una lista completa.',
+    tags: ['grupos', 'ganadores', 'lista'],
+    color: 'gold',
+  },
+  {
+    id: '02',
+    slug: '/dados',
+    name: 'DADOS',
+    subtitle: 'Lanzamiento personalizado',
+    icon: '⚄',
+    desc: 'D4 al D100 + rangos personalizados. Hasta 20 dados simultáneos.',
+    tags: ['D6', 'D20', 'D100'],
+    color: 'ember',
+  },
+  {
+    id: '03',
+    slug: '/cartas',
+    name: 'CARTAS',
+    subtitle: 'Baraja española y francesa',
+    icon: '🃏',
+    desc: 'Saca cartas de una baraja francesa (52) o española (40), con o sin repetición.',
+    tags: ['francesa', 'española', '♠♥'],
+    color: 'crimson',
+  },
+  {
+    id: '04',
+    slug: '/numero',
+    name: 'NÚMERO',
+    subtitle: 'En rango personalizado',
+    icon: '🎯',
+    desc: 'Entero aleatorio entre cualquier mínimo y máximo. Con animación de rodillo.',
+    tags: ['rango', 'entero', 'min-max'],
+    color: 'amber',
+  },
+  {
+    id: '05',
+    slug: '/moneda',
+    name: 'MONEDA',
+    subtitle: 'Cara o Cruz',
+    icon: '🪙',
+    desc: 'Lanza hasta 20 monedas. Estadísticas visuales de cara/cruz en tiempo real.',
+    tags: ['cara', 'cruz', 'estadísticas'],
+    color: 'gold',
+  },
+  {
+    id: '06',
+    slug: '/ruleta',
+    name: 'RULETA',
+    subtitle: 'Elige entre opciones',
+    icon: '🎡',
+    desc: 'Escribe tus opciones, la ruleta elige con animación de barrido.',
+    tags: ['opciones', 'elección', 'lista'],
+    color: 'violet',
+  },
+] as const;
+
+const colorMap: Record<string, string> = {
+  gold:    'border-gold/25 hover:border-gold/55',
+  amber:   'border-amber/25 hover:border-amber/55',
+  ember:   'border-ember/25 hover:border-ember/55',
+  crimson: 'border-crimson/25 hover:border-crimson/55',
+  violet:  'border-violet/25 hover:border-violet/55',
+};
+
+const textColorMap: Record<string, string> = {
+  gold:    'text-gold',
+  amber:   'text-amber',
+  ember:   'text-ember',
+  crimson: 'text-crimson',
+  violet:  'text-violet',
+};
+---
+
+<section id="tools" class="py-24 px-6">
+  <div class="max-w-6xl mx-auto">
+
+    <!-- Header -->
+    <div class="mb-20 text-center">
+      <div class="flex items-center gap-4 mb-8">
+        <div class="flex-1 h-px" style="background: linear-gradient(90deg, transparent, rgba(212,168,67,.15), transparent)"></div>
+        <span class="font-mono text-[10px] tracking-[.25em] uppercase text-muted">Herramientas</span>
+        <div class="flex-1 h-px" style="background: linear-gradient(90deg, transparent, rgba(212,168,67,.15), transparent)"></div>
+      </div>
+      <h2 class="font-display text-[clamp(3rem,8vw,7rem)] leading-none text-prim mb-4">
+        LAS <span class="text-gold">HERRAMIENTAS</span>
+      </h2>
+      <p class="font-serif text-lg font-light italic text-sec max-w-xl mx-auto">
+        Cada resultado alimentado por la entropía de tu cursor
+      </p>
+    </div>
+
+    <!-- Tool cards grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+      {tools.map((tool, i) => (
+        <a
+          href={tool.slug}
+          class={`spotlight-card group block bg-card border rounded-sm p-7 transition-all duration-300 hover:-translate-y-1 animate-float-up ${colorMap[tool.color]}`}
+          style={`animation-delay: ${i * 80}ms`}
+          data-hover
+        >
+          <!-- Header row -->
+          <div class="flex items-start justify-between mb-5">
+            <div>
+              <span class="font-mono text-[9px] tracking-[.2em] uppercase text-muted block mb-1.5">
+                {tool.id}
+              </span>
+              <h3 class={`font-display text-3xl tracking-wide ${textColorMap[tool.color]}`}>
+                {tool.name}
+              </h3>
+            </div>
+            <span class="text-3xl opacity-70 group-hover:opacity-100 transition-opacity duration-200 select-none">
+              {tool.icon}
+            </span>
+          </div>
+
+          <!-- Subtitle -->
+          <p class="font-serif italic text-sec text-base mb-3">{tool.subtitle}</p>
+
+          <!-- Description -->
+          <p class="font-mono text-[11px] text-muted leading-relaxed mb-5">{tool.desc}</p>
+
+          <!-- Tags + arrow -->
+          <div class="flex items-center justify-between">
+            <div class="flex gap-1.5 flex-wrap">
+              {tool.tags.map(tag => (
+                <span class="font-mono text-[9px] tracking-widest uppercase text-muted border border-gold/10 px-2 py-0.5 rounded-sm">
+                  {tag}
+                </span>
+              ))}
+            </div>
+            <span class={`font-mono text-sm ${textColorMap[tool.color]} opacity-0 group-hover:opacity-100 transition-opacity duration-200`}>
+              →
+            </span>
+          </div>
+        </a>
+      ))}
+    </div>
+  </div>
+</section>

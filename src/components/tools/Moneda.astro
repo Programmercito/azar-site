@@ -1,0 +1,227 @@
+---
+// Tool: Moneda (Cara o Cruz) — with premium stats visualization
+---
+
+<div id="tool-moneda" class="spotlight-card bg-card border border-gold/10 rounded-sm p-8 md:p-10 transition-all duration-300 hover:border-gold/30">
+
+  <div class="flex items-start justify-between mb-8">
+    <div>
+      <div class="font-mono text-[10px] tracking-[.2em] uppercase text-muted mb-2">05 — Moneda</div>
+      <h3 class="font-display text-4xl md:text-5xl text-prim tracking-wide">MONEDA</h3>
+      <p class="font-serif italic text-sec text-lg mt-1">Cara o Cruz</p>
+    </div>
+    <div id="coin-icon" class="text-5xl select-none">🪙</div>
+  </div>
+
+  <!-- Count slider -->
+  <div class="mb-8">
+    <div class="flex justify-between items-center mb-3">
+      <label class="font-mono text-[10px] tracking-[.15em] uppercase text-muted">Lanzamientos</label>
+      <span id="coin-qty-val" class="font-display text-2xl text-gold">1</span>
+    </div>
+    <input type="range" id="coin-qty" min="1" max="20" value="1" />
+    <div class="flex justify-between font-mono text-[9px] text-muted mt-1">
+      <span>1</span><span>10</span><span>20</span>
+    </div>
+  </div>
+
+  <!-- Single flip: big coin display -->
+  <div id="coin-single" class="flex flex-col items-center justify-center min-h-[140px] mb-8 gap-3">
+    <div id="coin-face"
+         class="w-24 h-24 rounded-full border-2 border-gold/20 flex items-center justify-center text-5xl select-none transition-all duration-500"
+         style="background: radial-gradient(circle at 35% 35%, rgba(212,168,67,.15), transparent 70%);">
+      🪙
+    </div>
+    <div id="coin-label" class="font-mono text-[10px] tracking-widest uppercase text-muted">Lanza para empezar</div>
+  </div>
+
+  <!-- Multi flip: results grid + stats chart -->
+  <div id="coin-multi" class="hidden mb-8">
+    <!-- Coin grid -->
+    <div id="coin-grid" class="flex flex-wrap gap-2 justify-center mb-8 min-h-[40px]"></div>
+
+    <!-- Stats visual -->
+    <div class="bg-void/50 border border-gold/8 rounded-sm p-6">
+      <div class="font-mono text-[10px] tracking-[.2em] uppercase text-muted mb-6 text-center">Distribución</div>
+
+      <!-- Bar chart -->
+      <div class="space-y-4">
+        <!-- Cara -->
+        <div>
+          <div class="flex justify-between items-center mb-2">
+            <div class="flex items-center gap-2">
+              <span class="font-mono text-xs text-amber">🪙</span>
+              <span class="font-mono text-xs text-prim tracking-wider">CARA</span>
+            </div>
+            <div class="flex items-center gap-3">
+              <span id="heads-count" class="font-display text-2xl text-amber">0</span>
+              <span id="heads-pct" class="font-mono text-[10px] text-muted w-10 text-right">0%</span>
+            </div>
+          </div>
+          <div class="h-2 bg-elevated rounded-full overflow-hidden">
+            <div id="heads-bar"
+                 class="h-full rounded-full transition-all duration-700 ease-out"
+                 style="width:0%; background: linear-gradient(90deg, var(--color-gold), var(--color-amber));
+                        animation: bar-fill .7s ease both;"></div>
+          </div>
+        </div>
+
+        <!-- Cruz -->
+        <div>
+          <div class="flex justify-between items-center mb-2">
+            <div class="flex items-center gap-2">
+              <span class="font-mono text-xs text-violet">⭕</span>
+              <span class="font-mono text-xs text-prim tracking-wider">CRUZ</span>
+            </div>
+            <div class="flex items-center gap-3">
+              <span id="tails-count" class="font-display text-2xl text-violet">0</span>
+              <span id="tails-pct" class="font-mono text-[10px] text-muted w-10 text-right">0%</span>
+            </div>
+          </div>
+          <div class="h-2 bg-elevated rounded-full overflow-hidden">
+            <div id="tails-bar"
+                 class="h-full rounded-full transition-all duration-700 ease-out"
+                 style="width:0%; background: linear-gradient(90deg, var(--color-violet), rgba(123,94,167,.6));
+                        animation: bar-fill .7s .1s ease both;"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Ratio pills -->
+      <div id="ratio-pills" class="mt-6 h-3 rounded-full overflow-hidden flex hidden">
+        <div id="ratio-heads"
+             class="h-full transition-all duration-700"
+             style="background: linear-gradient(90deg, var(--color-gold), var(--color-amber));"></div>
+        <div id="ratio-tails"
+             class="h-full transition-all duration-700"
+             style="background: linear-gradient(90deg, var(--color-violet), rgba(123,94,167,.6));"></div>
+      </div>
+
+      <!-- Total -->
+      <div class="flex justify-center mt-4">
+        <span class="font-mono text-[10px] text-muted">
+          Total: <span id="total-count" class="text-sec">0</span> lanzamientos
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <button id="coin-btn" data-hover
+          class="w-full font-mono text-xs tracking-[.15em] uppercase bg-gold text-void py-4 rounded-sm font-medium hover:bg-amber transition-colors duration-200 active:scale-[.99]"
+          onmouseenter="this.style.boxShadow='0 0 24px rgba(212,168,67,.3)'"
+          onmouseleave="this.style.boxShadow='none'">
+    🪙 Lanzar Moneda
+  </button>
+</div>
+
+<script>
+  const qtyIn      = document.getElementById('coin-qty') as HTMLInputElement;
+  const qtyVal     = document.getElementById('coin-qty-val')!;
+  const singleDiv  = document.getElementById('coin-single')!;
+  const multiDiv   = document.getElementById('coin-multi')!;
+  const coinFace   = document.getElementById('coin-face')!;
+  const coinLabel  = document.getElementById('coin-label')!;
+  const coinGrid   = document.getElementById('coin-grid')!;
+  const headsCount = document.getElementById('heads-count')!;
+  const tailsCount = document.getElementById('tails-count')!;
+  const headsPct   = document.getElementById('heads-pct')!;
+  const tailsPct   = document.getElementById('tails-pct')!;
+  const headsBar   = document.getElementById('heads-bar') as HTMLElement;
+  const tailsBar   = document.getElementById('tails-bar') as HTMLElement;
+  const ratioPills = document.getElementById('ratio-pills')!;
+  const ratioHeads = document.getElementById('ratio-heads') as HTMLElement;
+  const ratioTails = document.getElementById('ratio-tails') as HTMLElement;
+  const totalCount = document.getElementById('total-count')!;
+  const btn        = document.getElementById('coin-btn')!;
+
+  function updateMode() {
+    const qty = parseInt(qtyIn.value);
+    if (qty === 1) {
+      singleDiv.classList.remove('hidden');
+      multiDiv.classList.add('hidden');
+    } else {
+      singleDiv.classList.add('hidden');
+      multiDiv.classList.remove('hidden');
+    }
+  }
+
+  qtyIn.addEventListener('input', () => {
+    qtyVal.textContent = qtyIn.value;
+    updateMode();
+  });
+
+  updateMode();
+
+  btn.addEventListener('click', () => {
+    const azarRandom = (window as any).azarRandom as () => number;
+    const qty    = parseInt(qtyIn.value);
+    const flips  = Array.from({ length: qty }, () => azarRandom() < 0.5);
+    const heads  = flips.filter(Boolean).length;
+    const tails  = qty - heads;
+
+    if (qty === 1) {
+      const isCara = flips[0];
+      // Animate coin
+      coinFace.style.transform  = 'rotateY(180deg)';
+      coinFace.style.opacity    = '0';
+      setTimeout(() => {
+        coinFace.textContent        = isCara ? '🪙' : '⭕';
+        coinFace.style.borderColor  = isCara ? 'rgba(245,200,66,.6)' : 'rgba(123,94,167,.6)';
+        coinFace.style.boxShadow    = isCara
+          ? '0 0 30px rgba(245,200,66,.25), inset 0 0 20px rgba(212,168,67,.1)'
+          : '0 0 30px rgba(123,94,167,.25), inset 0 0 20px rgba(123,94,167,.1)';
+        coinFace.style.transform    = 'rotateY(0deg)';
+        coinFace.style.opacity      = '1';
+        coinLabel.textContent       = isCara ? '✦ CARA' : '◎ CRUZ';
+        coinLabel.className = `font-mono text-[11px] tracking-widest uppercase ${isCara ? 'text-amber' : 'text-violet'}`;
+      }, 200);
+
+    } else {
+      // Multi flip grid
+      coinGrid.innerHTML = flips.map((f, i) => `
+        <div class="flex flex-col items-center gap-1 animate-fade" style="animation-delay:${i * 25}ms">
+          <div class="w-9 h-9 rounded-full flex items-center justify-center text-lg border transition-all"
+               style="border-color:${f ? 'rgba(245,200,66,.45)' : 'rgba(123,94,167,.45)'};
+                      background: ${f ? 'rgba(212,168,67,.08)' : 'rgba(123,94,167,.08)'};
+                      box-shadow: 0 0 10px ${f ? 'rgba(245,200,66,.1)' : 'rgba(123,94,167,.1)'};">
+            ${f ? '🪙' : '⭕'}
+          </div>
+        </div>
+      `).join('');
+
+      // Update bars with animation
+      const headPct = Math.round((heads / qty) * 100);
+      const tailPct = 100 - headPct;
+
+      headsCount.textContent = String(heads);
+      tailsCount.textContent = String(tails);
+      headsPct.textContent   = headPct + '%';
+      tailsPct.textContent   = tailPct + '%';
+      totalCount.textContent = String(qty);
+
+      // Reset then animate bars
+      headsBar.style.width = '0%';
+      tailsBar.style.width = '0%';
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          headsBar.style.width = headPct + '%';
+          tailsBar.style.width = tailPct + '%';
+        });
+      });
+
+      // Ratio pill
+      ratioPills.classList.remove('hidden');
+      ratioPills.classList.add('flex');
+      ratioHeads.style.width = headPct + '%';
+      ratioTails.style.width = tailPct + '%';
+    }
+  });
+
+  // Spotlight
+  const card = document.getElementById('tool-moneda')!;
+  card.addEventListener('mousemove', e => {
+    const r = card.getBoundingClientRect();
+    card.style.setProperty('--mx', ((e.clientX - r.left) / r.width  * 100).toFixed(1) + '%');
+    card.style.setProperty('--my', ((e.clientY - r.top)  / r.height * 100).toFixed(1) + '%');
+  });
+</script>

@@ -1,11 +1,35 @@
 ---
-import Welcome from '../components/Welcome.astro';
-import Layout from '../layouts/Layout.astro';
-
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+import Layout       from '../layouts/Layout.astro';
+import Hero         from '../components/Hero.astro';
+import ToolsSection from '../components/ToolsSection.astro';
 ---
 
-<Layout>
-	<Welcome />
+<Layout
+  title="Azar — Herramientas de Aleatoriedad"
+  description="Sorteos, dados, cartas, moneda y más — potenciados por entropía real de tu cursor. 100% frontend, sin servidores."
+>
+
+  <Hero />
+
+  <ToolsSection />
+
+  <!-- ─── FOOTER ──────────────────────────────────────────── -->
+  <footer class="border-t border-gold/8 py-12 px-6">
+    <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <span class="text-xl text-gold">⟆</span>
+        <span class="font-display text-lg tracking-widest text-prim uppercase">Azar</span>
+        <span class="font-mono text-[10px] text-muted border border-gold/10 px-2 py-0.5 rounded-sm">v1.0</span>
+      </div>
+
+      <p class="font-mono text-[10px] text-muted text-center leading-relaxed">
+        100% Frontend · Sin servidores · Tu entropía, tu aleatoriedad
+      </p>
+
+      <div class="font-mono text-[10px] text-muted">
+        Hecho con caos ⟆
+      </div>
+    </div>
+  </footer>
+
 </Layout>

@@ -1,1 +1,171 @@
 @import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,700;1,300;1,400&family=DM+Mono:wght@300;400;500&family=Bebas+Neue&display=swap');
+
+/* ─── TAILWIND v4 TOKENS ─────────────────────────────────── */
+@theme {
+  --color-void:     #080810;
+  --color-deep:     #0d0d1a;
+  --color-surface:  #12121f;
+  --color-card:     #16162a;
+  --color-elevated: #1e1e35;
+
+  --color-gold:    #d4a843;
+  --color-amber:   #f5c842;
+  --color-ember:   #e8732a;
+  --color-crimson: #c2384a;
+  --color-violet:  #7b5ea7;
+
+  --color-prim:  #f0ead8;
+  --color-sec:   #a09880;
+  --color-muted: #5a5548;
+
+  --font-display: 'Bebas Neue', sans-serif;
+  --font-serif:   'Cormorant Garamond', serif;
+  --font-mono:    'DM Mono', monospace;
+}
+
+/* ─── BASE ───────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background-color: var(--color-void);
+  background-image:
+    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(123,94,167,.12) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 85% 85%, rgba(212,168,67,.07) 0%, transparent 50%);
+  color: var(--color-prim);
+  font-family: var(--font-serif);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ─── ENTROPY BAR ────────────────────────────────────────── */
+#entropy-bar {
+  position: fixed;
+  top: 0; left: 0;
+  height: 2px;
+  width: 0%;
+  z-index: 9000;
+  background: linear-gradient(90deg, var(--color-violet), var(--color-gold), var(--color-ember));
+  box-shadow: 0 0 6px rgba(212,168,67,.7);
+  transition: width .4s ease;
+  pointer-events: none;
+}
+
+#entropy-badge {
+  position: fixed;
+  top: 14px; right: 18px;
+  z-index: 9001;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: .1em;
+  color: var(--color-muted);
+  background: rgba(8,8,16,.85);
+  border: 1px solid rgba(212,168,67,.1);
+  padding: 4px 10px;
+  border-radius: 3px;
+  pointer-events: none;
+  transition: color .3s, border-color .3s;
+}
+#entropy-badge[data-charged="1"] {
+  color: var(--color-amber);
+  border-color: rgba(212,168,67,.35);
+}
+
+/* ─── CURSOR (GPU-only, no layout impact) ───────────────── */
+#cursor-dot,
+#cursor-ring {
+  display: none;                 /* shown via JS on non-touch */
+  position: fixed;
+  top: 0; left: 0;
+  pointer-events: none;
+  z-index: 9999;
+  will-change: transform;        /* GPU layer */
+  contain: strict;               /* no reflow propagation */
+}
+
+#cursor-dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--color-amber);
+  box-shadow: 0 0 10px var(--color-amber), 0 0 24px rgba(245,200,66,.35);
+  z-index: 9999;
+}
+
+#cursor-ring {
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(212,168,67,.55);
+  transition: width .22s ease, height .22s ease, border-color .2s;
+  z-index: 9998;
+}
+#cursor-ring.hovering {
+  width: 52px; height: 52px;
+  border-color: rgba(245,200,66,.85);
+}
+
+/* ─── SPOTLIGHT CARD ─────────────────────────────────────── */
+.spotlight-card { position: relative; overflow: hidden; }
+.spotlight-card::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse at var(--mx,50%) var(--my,50%),
+    rgba(212,168,67,.055) 0%, transparent 58%);
+  opacity: 0;
+  transition: opacity .35s;
+  pointer-events: none;
+}
+.spotlight-card:hover::before { opacity: 1; }
+
+/* ─── ANIMATIONS ─────────────────────────────────────────── */
+@keyframes float-up {
+  from { opacity:0; transform:translateY(32px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+@keyframes fade-in  { from { opacity:0; } to { opacity:1; } }
+@keyframes dice-shake {
+  0%,100% { transform: rotate(0deg) scale(1); }
+  20%  { transform: rotate(-14deg) scale(1.12); }
+  40%  { transform: rotate(10deg) scale(.93); }
+  60%  { transform: rotate(-7deg) scale(1.06); }
+  80%  { transform: rotate(4deg) scale(.97); }
+}
+@keyframes bar-fill {
+  from { width: 0; }
+}
+@keyframes spin-slow { to { transform: rotate(360deg); } }
+
+.animate-float-up   { animation: float-up .6s ease both; }
+.animate-fade       { animation: fade-in .4s ease both; }
+.animate-dice-shake { animation: dice-shake .55s ease both; }
+.animate-spin-slow  { animation: spin-slow 10s linear infinite; }
+
+.delay-100 { animation-delay: .1s; }
+.delay-200 { animation-delay: .2s; }
+.delay-300 { animation-delay: .3s; }
+.delay-400 { animation-delay: .4s; }
+.delay-500 { animation-delay: .5s; }
+
+/* ─── FORM ELEMENTS ──────────────────────────────────────── */
+input[type="range"] {
+  -webkit-appearance: none; appearance: none;
+  width: 100%; height: 2px;
+  background: var(--color-elevated);
+  outline: none; cursor: pointer;
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px; height: 16px; border-radius: 50%;
+  background: var(--color-gold);
+  box-shadow: 0 0 8px rgba(212,168,67,.55);
+  transition: transform .12s ease;
+  cursor: pointer;
+}
+input[type="range"]:active::-webkit-slider-thumb { transform: scale(1.35); }
+
+/* ─── SCROLLBAR ──────────────────────────────────────────── */
+::-webkit-scrollbar       { width: 4px; }
+::-webkit-scrollbar-track { background: var(--color-void); }
+::-webkit-scrollbar-thumb { background: rgba(212,168,67,.13); border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(212,168,67,.3); }

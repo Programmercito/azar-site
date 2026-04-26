@@ -1,0 +1,99 @@
+---
+// Tool: Ruleta de Opciones
+---
+
+<div id="tool-ruleta"
+     class="spotlight-card relative bg-card border border-gold/10 rounded-sm p-8 md:p-10 overflow-hidden transition-all duration-300 hover:border-gold/30 hover:-translate-y-1">
+
+  <div class="flex items-start justify-between mb-8">
+    <div>
+      <div class="font-mono text-[10px] tracking-[0.2em] uppercase text-muted mb-2">06 — Ruleta</div>
+      <h3 class="font-display text-4xl md:text-5xl text-prim tracking-wide">RULETA</h3>
+      <p class="font-serif italic text-sec text-lg mt-1">Elige entre tus opciones</p>
+    </div>
+    <div class="text-4xl select-none">🎡</div>
+  </div>
+
+  <div class="mb-6">
+    <label class="font-mono text-[10px] tracking-[0.15em] uppercase text-muted block mb-2">
+      Opciones (una por línea)
+    </label>
+    <textarea id="ruleta-options"
+              class="w-full bg-elevated border border-gold/10 text-prim font-mono text-sm p-4 rounded-sm outline-none resize-none focus:border-gold/35 transition-colors duration-200 placeholder:text-muted"
+              rows="4"
+              placeholder="Pizza&#10;Sushi&#10;Tacos&#10;Ramen&#10;Hamburgesa"></textarea>
+  </div>
+
+  <!-- Visual spinning indicator -->
+  <div id="ruleta-display"
+       class="relative min-h-[80px] bg-void/60 border border-gold/8 rounded-sm mb-6 overflow-hidden flex items-center justify-center">
+    <span class="font-mono text-xs text-muted">La elección aparecerá aquí</span>
+    <div id="ruleta-scan" class="absolute inset-0 pointer-events-none hidden"
+         style="background: linear-gradient(180deg, transparent 0%, rgba(212,168,67,.05) 50%, transparent 100%);
+                animation: scan-line 0.15s ease infinite;"></div>
+  </div>
+
+  <button id="ruleta-btn" data-hover
+          class="w-full font-mono text-xs tracking-[0.15em] uppercase bg-gold text-void py-4 rounded-sm font-medium hover:bg-amber transition-colors duration-200 active:scale-[0.99]"
+          onmouseenter="this.style.boxShadow='0 0 25px rgba(212,168,67,.3)'"
+          onmouseleave="this.style.boxShadow='none'">
+    🎡 Girar Ruleta
+  </button>
+</div>
+
+<style>
+@keyframes scan-line {
+  0%   { transform: translateY(-100%); }
+  100% { transform: translateY(200%); }
+}
+</style>
+
+<script>
+  const textarea  = document.getElementById('ruleta-options') as HTMLTextAreaElement;
+  const display   = document.getElementById('ruleta-display')!;
+  const scan      = document.getElementById('ruleta-scan')!;
+  const btn       = document.getElementById('ruleta-btn')!;
+
+  btn.addEventListener('click', () => {
+    const azarRandom = (window as any).azarRandom as () => number;
+    const options = textarea.value.split('\n').map(s => s.trim()).filter(Boolean);
+    if (options.length === 0) {
+      display.innerHTML = `<span class="font-mono text-xs text-crimson">⚠ Agrega opciones primero</span>`;
+      return;
+    }
+
+    scan.classList.remove('hidden');
+    btn.setAttribute('disabled', '');
+
+    // Rolling animation through random options
+    let ticks = 0;
+    const totalTicks = 18 + Math.floor(azarRandom() * 10);
+    const interval = setInterval(() => {
+      const pick = options[Math.floor(azarRandom() * options.length)];
+      display.innerHTML = `<div class="font-serif text-2xl text-sec italic px-4 text-center">${pick}</div>`;
+      ticks++;
+
+      if (ticks >= totalTicks) {
+        clearInterval(interval);
+        scan.classList.add('hidden');
+        btn.removeAttribute('disabled');
+
+        const final = options[Math.floor(azarRandom() * options.length)];
+        display.innerHTML = `
+          <div class="text-center animate-float-up px-4">
+            <div class="font-display text-4xl text-amber mb-1" style="text-shadow:0 0 20px rgba(245,200,66,.4)">${final}</div>
+            <div class="font-mono text-[10px] text-muted uppercase tracking-widest">✓ Seleccionado</div>
+          </div>`;
+        document.getElementById('last-random')!.textContent = final;
+      }
+    }, 80);
+  });
+
+  // Spotlight
+  const card = document.getElementById('tool-ruleta')!;
+  card.addEventListener('mousemove', e => {
+    const r = card.getBoundingClientRect();
+    card.style.setProperty('--mx', ((e.clientX - r.left) / r.width * 100).toFixed(1) + '%');
+    card.style.setProperty('--my', ((e.clientY - r.top)  / r.height * 100).toFixed(1) + '%');
+  });
+</script>

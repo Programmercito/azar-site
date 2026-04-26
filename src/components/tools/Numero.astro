@@ -1,0 +1,83 @@
+---
+// Tool: Generador de Número Aleatorio
+---
+
+<div id="tool-numero"
+     class="spotlight-card relative bg-card border border-gold/10 rounded-sm p-8 md:p-10 overflow-hidden transition-all duration-300 hover:border-gold/30 hover:-translate-y-1">
+
+  <div class="flex items-start justify-between mb-8">
+    <div>
+      <div class="font-mono text-[10px] tracking-[0.2em] uppercase text-muted mb-2">04 — Número</div>
+      <h3 class="font-display text-4xl md:text-5xl text-prim tracking-wide">NÚMERO</h3>
+      <p class="font-serif italic text-sec text-lg mt-1">En un rango personalizado</p>
+    </div>
+    <div class="text-4xl select-none">🎯</div>
+  </div>
+
+  <div class="grid grid-cols-2 gap-4 mb-6">
+    <div>
+      <label class="font-mono text-[10px] tracking-[0.15em] uppercase text-muted block mb-2">Mínimo</label>
+      <input type="number" id="num-min" value="1"
+             class="w-full bg-elevated border border-gold/10 text-prim font-mono text-sm px-4 py-3 rounded-sm outline-none focus:border-gold/35 transition-colors duration-200" />
+    </div>
+    <div>
+      <label class="font-mono text-[10px] tracking-[0.15em] uppercase text-muted block mb-2">Máximo</label>
+      <input type="number" id="num-max" value="100"
+             class="w-full bg-elevated border border-gold/10 text-prim font-mono text-sm px-4 py-3 rounded-sm outline-none focus:border-gold/35 transition-colors duration-200" />
+    </div>
+  </div>
+
+  <!-- Big number display -->
+  <div class="flex items-center justify-center min-h-[100px] mb-6">
+    <div id="num-result"
+         class="font-display text-[clamp(4rem,10vw,7rem)] leading-none text-amber transition-all duration-300"
+         style="text-shadow: 0 0 40px rgba(245,200,66,.3);">
+      ?
+    </div>
+  </div>
+
+  <button id="num-btn" data-hover
+          class="w-full font-mono text-xs tracking-[0.15em] uppercase bg-gold text-void py-4 rounded-sm font-medium hover:bg-amber transition-colors duration-200 active:scale-[0.99]"
+          onmouseenter="this.style.boxShadow='0 0 25px rgba(212,168,67,.3)'"
+          onmouseleave="this.style.boxShadow='none'">
+    ◉ Generar Número
+  </button>
+</div>
+
+<script>
+  const minIn  = document.getElementById('num-min') as HTMLInputElement;
+  const maxIn  = document.getElementById('num-max') as HTMLInputElement;
+  const resEl  = document.getElementById('num-result')!;
+  const btn    = document.getElementById('num-btn')!;
+
+  btn.addEventListener('click', () => {
+    const azarRandom = (window as any).azarRandom as () => number;
+    const min = parseInt(minIn.value);
+    const max = parseInt(maxIn.value);
+    if (isNaN(min) || isNaN(max) || min >= max) {
+      resEl.textContent = '!';
+      resEl.style.color = 'var(--color-crimson)';
+      return;
+    }
+    resEl.style.color = '';
+    // Quick roll animation
+    let ticks = 0;
+    const interval = setInterval(() => {
+      resEl.textContent = String(min + Math.floor(azarRandom() * (max - min + 1)));
+      if (++ticks >= 12) {
+        clearInterval(interval);
+        const final = min + Math.floor(azarRandom() * (max - min + 1));
+        resEl.textContent = String(final);
+        document.getElementById('last-random')!.textContent = String(final);
+      }
+    }, 50);
+  });
+
+  // Spotlight
+  const card = document.getElementById('tool-numero')!;
+  card.addEventListener('mousemove', e => {
+    const r = card.getBoundingClientRect();
+    card.style.setProperty('--mx', ((e.clientX - r.left) / r.width * 100).toFixed(1) + '%');
+    card.style.setProperty('--my', ((e.clientY - r.top)  / r.height * 100).toFixed(1) + '%');
+  });
+</script>
