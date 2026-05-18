@@ -7,8 +7,8 @@ interface Props {
 }
 
 const {
-  title = "Azar — Números Aleatorios Reales y Sorteos Online",
-  description = "Generador de números aleatorios reales y juegos al azar. Realiza sorteos online gratis, tira dados o usa nuestra ruleta real con randomización absoluta basada en tu propia entropía.",
+  title = "Azar — Generador de Números Aleatorios y Sorteos con Entropía Real",
+  description = "La herramienta definitiva de aleatoriedad. Sorteos online, dados, cartas y ruleta potenciados por entropía humana real capturada de tu cursor. 100% frontend y criptográficamente seguro.",
 } = Astro.props;
 
 const siteUrl = Astro.site || 'https://azar.devcito.org';
@@ -27,22 +27,28 @@ const previewImage = new URL('/preview.png', siteUrl).toString();
     <meta name="description" content={description} />
     <meta name="theme-color" content="#080810" />
     <meta name="robots" content="index, follow" />
+    <meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
     <meta name="author" content="Devcito" />
+    <meta name="keywords" content="azar, aleatoriedad real, sorteos online, generador de números, dados online, ruleta aleatoria, entropía del cursor, random generator" />
 
     <!-- Canonical URL -->
     <link rel="canonical" href={canonicalUrl} />
 
     <!-- OpenGraph -->
+    <meta property="og:locale" content="es_ES" />
     <meta property="og:type" content="website" />
     <meta property="og:url" content={canonicalUrl} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:site_name" content="Azar by Devcito" />
     <meta property="og:image" content={previewImage} />
-    <meta property="og:image:alt" content="Azar — Herramientas de aleatoriedad basadas en la entropía del cursor" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Azar — Aleatoriedad Real basada en Entropía Humana" />
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@devcito" />
     <meta name="twitter:url" content={canonicalUrl} />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
@@ -56,21 +62,31 @@ const previewImage = new URL('/preview.png', siteUrl).toString();
       "@context": "https://schema.org",
       "@type": "WebApplication",
       "name": "Azar",
+      "alternateName": "Azar - Aleatoriedad Real",
       "url": siteUrl,
-      "description": "Generador de números aleatorios reales y suite de juegos al azar. Herramientas para sorteos online, ruleta real online y dados, con randomización criptográfica humana.",
+      "description": "Generador de aleatoriedad real usando entropía capturada del movimiento del usuario. Incluye herramientas para sorteos, dados, cartas y ruleta.",
       "image": previewImage,
-      "applicationCategory": "UtilitiesApplication",
+      "applicationCategory": "UtilitiesApplication, DesignApplication",
       "operatingSystem": "All",
+      "keywords": "azar, random, sorteos, dados, cartas, ruleta, entropía",
       "author": {
-        "@type": "Organization",
+        "@type": "Person",
         "name": "Devcito",
-        "url": siteUrl
+        "url": "https://devcito.org"
       },
       "offers": {
         "@type": "Offer",
         "price": "0",
         "priceCurrency": "USD"
-      }
+      },
+      "featureList": [
+        "Sorteos de nombres y grupos",
+        "Lanzamiento de dados personalizables",
+        "Barajas de cartas española y francesa",
+        "Generador de números en rangos",
+        "Lanzamiento de monedas con estadísticas",
+        "Ruleta de opciones personalizada"
+      ]
     })} />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />

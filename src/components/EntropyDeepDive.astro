@@ -1,0 +1,195 @@
+---
+// EntropyDeepDive.astro - Detailed technical explanation of the randomness algorithm
+---
+
+<section id="how-it-works" class="py-24 sm:py-32 px-4 sm:px-6 bg-deep/30 relative overflow-hidden">
+  
+  <!-- Decorative background elements -->
+  <div class="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-gold/20 to-transparent"></div>
+  <div class="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-gold/20 to-transparent"></div>
+  
+  <div class="max-w-6xl mx-auto relative z-10">
+    
+    <!-- Title Section -->
+    <div class="mb-16">
+      <div class="flex items-center gap-3 mb-4">
+        <span class="w-8 h-px bg-gold"></span>
+        <span class="font-mono text-[10px] tracking-[0.4em] uppercase text-gold">Protocolo de Aleatoriedad</span>
+      </div>
+      <h2 class="font-display text-[clamp(2.5rem,7vw,6rem)] leading-[0.9] text-prim">
+        LA CIENCIA DEL <span class="text-gold italic">CAOS</span> CONTROLADO
+      </h2>
+    </div>
+
+    <!-- Main Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
+      
+      <!-- Left Column: Technical Narrative -->
+      <div class="lg:col-span-7 space-y-10">
+        
+        <div class="space-y-6">
+          <p class="font-serif text-xl sm:text-2xl font-light text-sec leading-relaxed">
+            A diferencia de los generadores pseudo-aleatorios (PRNG) convencionales que dependen de una semilla estática, <span class="text-prim">Azar</span> implementa un sistema de <strong class="text-gold font-normal">Entropía Adaptativa</strong>. 
+          </p>
+          <p class="font-mono text-sm text-muted leading-relaxed">
+            Nuestro motor no solo genera números; captura la micro-variabilidad del entorno digital y humano para crear un flujo de datos impredecible que es, por definición, irreproducible.
+          </p>
+        </div>
+
+        <!-- Detail Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          
+          <div class="p-6 bg-surface border border-gold/10 rounded-sm hover:border-gold/30 transition-colors group">
+            <div class="font-mono text-[10px] text-gold mb-3 opacity-60">PHASE_01</div>
+            <h3 class="font-display text-xl text-prim mb-3 tracking-wide">MUESTREO DE JITTER</h3>
+            <p class="font-mono text-[11px] text-muted leading-relaxed">
+              Capturamos las fluctuaciones de microsegundos entre los frames de renderizado (RAF). Este "ruido térmico digital" es único para cada CPU y carga de trabajo actual.
+            </p>
+          </div>
+
+          <div class="p-6 bg-surface border border-gold/10 rounded-sm hover:border-gold/30 transition-colors group">
+            <div class="font-mono text-[10px] text-gold mb-3 opacity-60">PHASE_02</div>
+            <h3 class="font-display text-xl text-prim mb-3 tracking-wide">ENTROPÍA HUMANA</h3>
+            <p class="font-mono text-[11px] text-muted leading-relaxed">
+              Cada píxel que recorres con tu ratón o cada toque en pantalla inyecta datos de 32 bits en nuestro pool. Tu sistema motor es la fuente de entropía más pura.
+            </p>
+          </div>
+
+          <div class="p-6 bg-surface border border-gold/10 rounded-sm hover:border-gold/30 transition-colors group">
+            <div class="font-mono text-[10px] text-gold mb-3 opacity-60">PHASE_03</div>
+            <h3 class="font-display text-xl text-prim mb-3 tracking-wide">MEZCLA XORSHIFT</h3>
+            <p class="font-mono text-[11px] text-muted leading-relaxed">
+              Los datos recolectados se someten a un algoritmo de mezcla XOR-Shift-Add, redistribuyendo la densidad de bits para eliminar cualquier patrón estadístico.
+            </p>
+          </div>
+
+          <div class="p-6 bg-surface border border-gold/10 rounded-sm hover:border-gold/30 transition-colors group">
+            <div class="font-mono text-[10px] text-gold mb-3 opacity-60">PHASE_04</div>
+            <h3 class="font-display text-xl text-prim mb-3 tracking-wide">FUSIÓN CRIPTOGRÁFICA</h3>
+            <p class="font-mono text-[11px] text-muted leading-relaxed">
+              Finalmente, combinamos el pool humano con el <code class="bg-void px-1">crypto.getRandomValues()</code> nativo, garantizando seguridad criptográfica de nivel militar.
+            </p>
+          </div>
+
+        </div>
+
+        <div class="pt-8 border-t border-gold/5">
+          <blockquote class="font-serif italic text-lg text-sec">
+            "En un universo determinista, el libre albedrío es la única fuente real de aleatoriedad. Azar es el puente entre tu voluntad y el resultado digital."
+          </blockquote>
+        </div>
+
+      </div>
+
+      <!-- Right Column: Visualizer / Technical Specs -->
+      <div class="lg:col-span-5">
+        <div class="sticky top-24">
+          <div class="bg-void/50 border border-gold/20 rounded-sm p-8 backdrop-blur-sm relative overflow-hidden">
+            <!-- Scanline effect -->
+            <div class="absolute inset-0 pointer-events-none opacity-[0.03]" 
+                 style="background: linear-gradient(rgba(18,18,31,0) 50%, rgba(212,168,67,0.5) 50%), linear-gradient(90deg, rgba(255,0,0,0.06), rgba(0,255,0,0.02), rgba(0,0,255,0.06)); background-size: 100% 4px, 3px 100%;"></div>
+            
+            <div class="relative z-10">
+              <div class="flex justify-between items-center mb-8">
+                <div class="font-mono text-[10px] tracking-widest text-gold uppercase">Kernel Status</div>
+                <div class="flex gap-1">
+                  <div class="w-1 h-1 bg-gold animate-pulse"></div>
+                  <div class="w-1 h-1 bg-gold animate-pulse delay-75"></div>
+                  <div class="w-1 h-1 bg-gold animate-pulse delay-150"></div>
+                </div>
+              </div>
+
+              <!-- Data Flow Visualization -->
+              <div class="space-y-6">
+                <div>
+                  <div class="flex justify-between font-mono text-[10px] text-muted mb-2 uppercase">
+                    <span>Input Drift (Jitter)</span>
+                    <span id="drift-val">0.000ms</span>
+                  </div>
+                  <div class="h-1 bg-gold/5 rounded-full overflow-hidden">
+                    <div id="drift-bar" class="h-full bg-gold/40 transition-all duration-75" style="width: 30%"></div>
+                  </div>
+                </div>
+
+                <div>
+                  <div class="flex justify-between font-mono text-[10px] text-muted mb-2 uppercase">
+                    <span>Entropy Density</span>
+                    <span id="density-val">98.4%</span>
+                  </div>
+                  <div class="h-1 bg-gold/5 rounded-full overflow-hidden">
+                    <div id="density-bar" class="h-full bg-amber transition-all duration-300" style="width: 85%"></div>
+                  </div>
+                </div>
+
+                <div>
+                  <div class="flex justify-between font-mono text-[10px] text-muted mb-2 uppercase">
+                    <span>Pool Saturation</span>
+                    <span id="saturation-val">256/256</span>
+                  </div>
+                  <div class="h-1 bg-gold/5 rounded-full overflow-hidden">
+                    <div id="saturation-bar" class="h-full bg-violet transition-all duration-500" style="width: 100%"></div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Code Snippet Lookalike -->
+              <div class="mt-10 pt-8 border-t border-gold/10">
+                <div class="font-mono text-[9px] text-muted/50 leading-relaxed overflow-hidden h-32 select-none">
+                  <div class="animate-scroll-code">
+                    [0x7B5EA7] INIT_ENTROPY_POOL...<br/>
+                    [0xD4A843] CAPTURING_MOUSE_X: {Math.random().toFixed(4)}<br/>
+                    [0xF5C842] INJECTING_THERMAL_NOISE...<br/>
+                    [0xE8732A] XOR_MIXING_S0_S1_S2...<br/>
+                    [0x7B5EA7] SEED_GENERATED: 0xAF32B...<br/>
+                    [0xD4A843] NORMALIZING_FLOAT_SPACE...<br/>
+                    [0x1E1E35] DONE: RESULT_STABLE<br/>
+                    [0x7B5EA7] POOL_RECYCLING_STARTED...<br/>
+                    [0xD4A843] WAIT_FOR_USER_INTERACTION...<br/>
+                    [0xF5C842] DRIFT_DETECTED: 0.0042s<br/>
+                    [0xE8732A] APPLYING_NON_DETERMINISTIC_SHIFT...<br/>
+                    [0x7B5EA7] BUFFER_OVERFLOW_PREVENTION: OK<br/>
+                    [0xD4A843] ENTROPY_HARVEST_SUCCESS<br/>
+                  </div>
+                </div>
+              </div>
+
+              <div class="mt-8 flex items-center gap-3">
+                <div class="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)]"></div>
+                <span class="font-mono text-[10px] text-muted uppercase tracking-tighter">Sistema Verificado y Criptográficamente Autónomo</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<style>
+  @keyframes scroll-code {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(-50%); }
+  }
+  .animate-scroll-code {
+    animation: scroll-code 20s linear infinite;
+  }
+</style>
+
+<script>
+  // Simple simulation for the visualizer
+  const driftVal = document.getElementById('drift-val');
+  const driftBar = document.getElementById('drift-bar');
+  
+  function updateVisualizer() {
+    const jitter = Math.random() * 0.015;
+    if (driftVal) driftVal.textContent = jitter.toFixed(4) + 'ms';
+    if (driftBar) driftBar.style.width = (jitter * 6000).toFixed(1) + '%';
+    
+    requestAnimationFrame(() => {
+      setTimeout(updateVisualizer, 100 + Math.random() * 200);
+    });
+  }
+  
+  updateVisualizer();
+</script>

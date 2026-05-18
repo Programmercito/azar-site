@@ -64,11 +64,11 @@ const tools = [
 ] as const;
 
 const colorMap: Record<string, string> = {
-  gold:    'border-gold/25 hover:border-gold/55',
-  amber:   'border-amber/25 hover:border-amber/55',
-  ember:   'border-ember/25 hover:border-ember/55',
-  crimson: 'border-crimson/25 hover:border-crimson/55',
-  violet:  'border-violet/25 hover:border-violet/55',
+  gold:    'border-gold/15 hover:border-gold/40 hover:shadow-[0_0_30px_rgba(212,168,67,0.1)]',
+  amber:   'border-amber/15 hover:border-amber/40 hover:shadow-[0_0_30px_rgba(245,200,66,0.1)]',
+  ember:   'border-ember/15 hover:border-ember/40 hover:shadow-[0_0_30px_rgba(232,115,42,0.1)]',
+  crimson: 'border-crimson/15 hover:border-crimson/40 hover:shadow-[0_0_30px_rgba(194,56,74,0.1)]',
+  violet:  'border-violet/15 hover:border-violet/40 hover:shadow-[0_0_30px_rgba(123,94,167,0.1)]',
 };
 
 const textColorMap: Record<string, string> = {
@@ -78,67 +78,84 @@ const textColorMap: Record<string, string> = {
   crimson: 'text-crimson',
   violet:  'text-violet',
 };
+
+const bgGlowMap: Record<string, string> = {
+  gold:    'group-hover:bg-gold/5',
+  amber:   'group-hover:bg-amber/5',
+  ember:   'group-hover:bg-ember/5',
+  crimson: 'group-hover:bg-crimson/5',
+  violet:  'group-hover:bg-violet/5',
+};
 ---
 
-<section id="tools" class="py-16 sm:py-24 px-4 sm:px-6">
-  <div class="max-w-6xl mx-auto">
+<section id="tools" class="py-24 sm:py-32 px-4 sm:px-6 relative">
+  
+  <!-- Section Background detail -->
+  <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80vw] h-[80vh] bg-gold/2 rounded-full blur-[120px] pointer-events-none"></div>
+
+  <div class="max-w-6xl mx-auto relative z-10">
 
     <!-- Header -->
-    <div class="mb-12 sm:mb-20 text-center">
-      <div class="flex items-center gap-4 mb-6 sm:mb-8">
-        <div class="flex-1 h-px" style="background: linear-gradient(90deg, transparent, rgba(212,168,67,.15), transparent)"></div>
-        <span class="font-mono text-[10px] tracking-[.25em] uppercase text-muted">Juegos</span>
-        <div class="flex-1 h-px" style="background: linear-gradient(90deg, transparent, rgba(212,168,67,.15), transparent)"></div>
+    <div class="mb-16 sm:mb-24 text-center">
+      <div class="flex items-center gap-4 mb-8">
+        <div class="flex-1 h-px bg-gradient-to-r from-transparent via-gold/10 to-transparent"></div>
+        <span class="font-mono text-[10px] tracking-[.4em] uppercase text-gold/60">Catálogo de Herramientas</span>
+        <div class="flex-1 h-px bg-gradient-to-r from-transparent via-gold/10 to-transparent"></div>
       </div>
-      <h2 class="font-display text-[clamp(2.5rem,8vw,7rem)] leading-none text-prim mb-4">
-        LOS <span class="text-gold">JUEGOS</span>
+      <h2 class="font-display text-[clamp(3rem,10vw,8rem)] leading-[0.85] text-prim mb-6">
+        ARQUITECTURA DEL <span class="text-gold">AZAR</span>
       </h2>
-      <p class="font-serif text-base sm:text-lg font-light italic text-sec max-w-xl mx-auto">
-        Cada resultado alimentado por la entropía de tu cursor
+      <p class="font-serif text-lg sm:text-xl font-light italic text-sec max-w-2xl mx-auto leading-relaxed">
+        Algoritmos de randomización humana aplicados a cada interacción. Elige tu herramienta de decisión.
       </p>
     </div>
 
     <!-- Tool cards grid -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
       {tools.map((tool, i) => (
         <a
           href={tool.slug}
-          class={`spotlight-card group block bg-card border rounded-sm p-5 sm:p-7 transition-all duration-300 hover:-translate-y-1 animate-float-up ${colorMap[tool.color]}`}
-          style={`animation-delay: ${i * 80}ms`}
+          class={`spotlight-card group block bg-card/40 backdrop-blur-sm border rounded-sm p-6 sm:p-8 transition-all duration-500 hover:-translate-y-2 animate-float-up ${colorMap[tool.color]} ${bgGlowMap[tool.color]}`}
+          style={`animation-delay: ${i * 100}ms`}
           data-hover
         >
+          <!-- Internal light effect -->
+          <div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+
           <!-- Header row -->
-          <div class="flex items-start justify-between mb-4">
+          <div class="flex items-start justify-between mb-6 relative z-10">
             <div>
-              <span class="font-mono text-[9px] tracking-[.2em] uppercase text-muted block mb-1.5">
-                {tool.id}
+              <span class="font-mono text-[10px] tracking-[.3em] uppercase text-muted block mb-2 opacity-50">
+                MODULE_{tool.id}
               </span>
-              <h3 class={`font-display text-3xl tracking-wide ${textColorMap[tool.color]}`}>
+              <h3 class={`font-display text-4xl tracking-wider transition-colors duration-300 ${textColorMap[tool.color]}`}>
                 {tool.name}
               </h3>
             </div>
-            <span class="text-3xl opacity-70 group-hover:opacity-100 transition-opacity duration-200 select-none">
-              {tool.icon}
-            </span>
+            <div class="w-12 h-12 flex items-center justify-center rounded-full bg-void/50 border border-white/5 group-hover:border-white/10 transition-colors">
+              <span class="text-2xl opacity-80 group-hover:opacity-100 group-hover:scale-110 transition-all duration-300 select-none">
+                {tool.icon}
+              </span>
+            </div>
           </div>
 
           <!-- Subtitle -->
-          <p class="font-serif italic text-sec text-base mb-3">{tool.subtitle}</p>
+          <p class="font-serif italic text-sec text-lg mb-4 relative z-10">{tool.subtitle}</p>
 
           <!-- Description -->
-          <p class="font-mono text-[11px] text-muted leading-relaxed mb-5">{tool.desc}</p>
+          <p class="font-mono text-[11px] text-muted/80 leading-relaxed mb-8 h-12 relative z-10">{tool.desc}</p>
 
           <!-- Tags + arrow -->
-          <div class="flex items-center justify-between">
-            <div class="flex gap-1.5 flex-wrap">
+          <div class="flex items-center justify-between pt-6 border-t border-white/5 relative z-10">
+            <div class="flex gap-2 flex-wrap">
               {tool.tags.map(tag => (
-                <span class="font-mono text-[9px] tracking-widest uppercase text-muted border border-gold/10 px-2 py-0.5 rounded-sm">
+                <span class="font-mono text-[9px] tracking-widest uppercase text-muted/60 border border-white/5 px-2 py-0.5 rounded-sm bg-white/2">
                   {tag}
                 </span>
               ))}
             </div>
-            <span class={`font-mono text-xs ${textColorMap[tool.color]} opacity-0 group-hover:opacity-100 transition-all duration-200 flex items-center gap-1`}>
-              Jugar <span>→</span>
+            <span class={`font-mono text-[10px] tracking-widest uppercase ${textColorMap[tool.color]} opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 flex items-center gap-2`}>
+              Ejecutar <span>→</span>
             </span>
           </div>
         </a>
