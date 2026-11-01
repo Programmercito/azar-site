@@ -18,7 +18,7 @@ const { title, seoDescription, toolId, toolName, toolSubtitle, toolIcon = '⟆' 
   <!-- ── Minimal sticky top nav ── -->
   <header id="tool-nav"
           class="fixed top-0 left-0 right-0 z-50 px-4 sm:px-6 py-3 flex items-center justify-between transition-all duration-300"
-          style="background: rgba(8,8,16,0);">
+          style="background: rgba(20,23,20,0);">
     <a href="/" data-hover
        class="flex items-center gap-2 font-mono text-[10px] tracking-[.15em] uppercase text-muted hover:text-gold transition-colors duration-200 touch-target">
       <span class="text-gold">←</span> Juegos
@@ -53,13 +53,13 @@ const { title, seoDescription, toolId, toolName, toolSubtitle, toolIcon = '⟆' 
     <!-- Technical Blurb -->
     <div class="mt-24 max-w-2xl w-full p-8 border border-gold/10 bg-surface/30 rounded-sm relative overflow-hidden group">
       <div class="absolute top-0 left-0 w-1 h-full bg-gold/20 group-hover:bg-gold/50 transition-colors"></div>
-      <h3 class="font-mono text-[10px] tracking-[.3em] uppercase text-gold mb-4">Notas de Implementación</h3>
+      <h3 class="font-mono text-[10px] tracking-[.3em] uppercase text-gold mb-4">Un poco sobre el azar</h3>
       <p class="font-mono text-[11px] text-muted leading-relaxed">
-        Este módulo utiliza el <strong>Algoritmo de Fusión Azar (AFA)</strong>. El resultado que ves no es solo matemático; es una captura física de tu interacción. Al momento de la ejecución, el pool de entropía (256 bits) se mezcla con el ruido térmico de tu CPU para garantizar una distribución estadística perfecta y una impredecibilidad absoluta.
+        Cada resultado combina datos de tus interacciones y del navegador. Todo sucede en tu dispositivo; esta herramienta no está diseñada para usos que requieran seguridad criptográfica.
       </p>
       <div class="mt-4 flex items-center gap-2">
         <div class="w-1 h-1 rounded-full bg-gold/50"></div>
-        <span class="font-mono text-[9px] text-muted/50 uppercase tracking-tighter">Criptográficamente Seguro · Ejecución Local</span>
+        <span class="font-mono text-[9px] text-muted uppercase tracking-tighter">Ejecución local · Hecho para explorar</span>
       </div>
     </div>
   </main>
@@ -81,13 +81,13 @@ const { title, seoDescription, toolId, toolName, toolSubtitle, toolIcon = '⟆' 
       const heroVisible = entries[0].isIntersecting;
       // When hero is NOT visible → show nav title + darken bg
       if (!heroVisible) {
-        nav.style.background       = 'rgba(8,8,16,.92)';
-        nav.style.borderBottom     = '1px solid rgba(212,168,67,.08)';
+        nav.style.background       = 'rgba(20,23,20,.94)';
+        nav.style.borderBottom     = '1px solid rgba(196,243,107,.12)';
         navTitle.style.opacity     = '1';
         navTitle.style.transform   = 'translateY(0)';
         navTitle.style.pointerEvents = 'auto';
       } else {
-        nav.style.background       = 'rgba(8,8,16,0)';
+        nav.style.background       = 'rgba(20,23,20,0)';
         nav.style.borderBottom     = 'none';
         navTitle.style.opacity     = '0';
         navTitle.style.transform   = 'translateY(4px)';

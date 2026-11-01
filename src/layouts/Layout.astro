@@ -8,7 +8,7 @@ interface Props {
 
 const {
   title = "Azar — Generador de Números Aleatorios y Sorteos con Entropía Real",
-  description = "La herramienta definitiva de aleatoriedad. Sorteos online, dados, cartas y ruleta potenciados por entropía humana real capturada de tu cursor. 100% frontend y criptográficamente seguro.",
+  description = "Sorteos, dados, cartas y ruleta con un toque de entropía de tu movimiento. Todo funciona en tu navegador.",
 } = Astro.props;
 
 const siteUrl = Astro.site || 'https://azar.devcito.org';
@@ -25,7 +25,7 @@ const previewImage = new URL('/preview.png', siteUrl).toString();
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
     <meta name="description" content={description} />
-    <meta name="theme-color" content="#080810" />
+    <meta name="theme-color" content="#141714" />
     <meta name="robots" content="index, follow" />
     <meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
     <meta name="author" content="Devcito" />
@@ -92,7 +92,7 @@ const previewImage = new URL('/preview.png', siteUrl).toString();
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,700;1,300;1,400&family=DM+Mono:wght@300;400;500&family=Bebas+Neue&display=swap"
+      href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=Syne:wght@400;500;600;700;800&display=swap"
     />
   </head>
   <body>
