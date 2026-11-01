@@ -20,23 +20,23 @@ const { title, seoDescription, toolId, toolName, toolSubtitle, toolIcon = '⟆' 
           class="fixed top-0 left-0 right-0 z-50 px-4 sm:px-6 py-3 flex items-center justify-between transition-all duration-300"
           style="background: rgba(20,23,20,0);">
     <a href="/" data-hover
-       class="flex items-center gap-2 font-mono text-[10px] tracking-[.15em] uppercase text-muted hover:text-gold transition-colors duration-200 touch-target">
+       class="flex items-center gap-2 font-mono text-sm tracking-[.12em] uppercase text-sec hover:text-gold transition-colors duration-200 touch-target">
       <span class="text-gold">←</span> Juegos
     </a>
 
     <!-- Tool name — only visible after scroll -->
     <div id="nav-title"
          class="flex items-center gap-2 opacity-0 translate-y-1 transition-all duration-300 pointer-events-none">
-      <span class="font-mono text-[9px] tracking-[.2em] text-muted">{toolId}</span>
-      <span class="font-display text-lg tracking-wider text-gold">{toolName}</span>
+      <span class="font-mono text-xs tracking-[.15em] text-muted">{toolId}</span>
+      <span class="font-display text-xl tracking-wider text-gold">{toolName}</span>
     </div>
 
-    <div class="font-mono text-[9px] text-muted/50 hidden sm:block">⟆ Azar</div>
+    <div class="font-mono text-xs text-muted hidden sm:block">⟆ Azar</div>
   </header>
 
   <!-- ── Hero section that scrolls away ── -->
   <div id="tool-hero" class="pt-16 pb-8 px-4 sm:px-6 text-center">
-    <p class="font-mono text-[10px] tracking-[.3em] uppercase text-muted mb-3">{toolId}</p>
+    <p class="font-mono text-xs tracking-[.2em] uppercase text-muted mb-3">{toolId}</p>
     <h1 class="font-display text-[clamp(4rem,14vw,9rem)] leading-none text-prim mb-2">{toolName}</h1>
     <p class="font-serif italic text-sec text-base sm:text-lg">{toolSubtitle}</p>
     <div class="mt-4 flex justify-center">
@@ -53,20 +53,20 @@ const { title, seoDescription, toolId, toolName, toolSubtitle, toolIcon = '⟆' 
     <!-- Technical Blurb -->
     <div class="mt-24 max-w-2xl w-full p-8 border border-gold/10 bg-surface/30 rounded-sm relative overflow-hidden group">
       <div class="absolute top-0 left-0 w-1 h-full bg-gold/20 group-hover:bg-gold/50 transition-colors"></div>
-      <h3 class="font-mono text-[10px] tracking-[.3em] uppercase text-gold mb-4">Un poco sobre el azar</h3>
-      <p class="font-mono text-[11px] text-muted leading-relaxed">
+      <h3 class="font-mono text-sm tracking-[.2em] uppercase text-gold mb-4">Un poco sobre el azar</h3>
+      <p class="font-mono text-base text-sec leading-relaxed">
         Cada resultado combina datos de tus interacciones y del navegador. Todo sucede en tu dispositivo; esta herramienta no está diseñada para usos que requieran seguridad criptográfica.
       </p>
       <div class="mt-4 flex items-center gap-2">
         <div class="w-1 h-1 rounded-full bg-gold/50"></div>
-        <span class="font-mono text-[9px] text-muted uppercase tracking-tighter">Ejecución local · Hecho para explorar</span>
+        <span class="font-mono text-xs text-muted uppercase tracking-wide">Ejecución local · Hecho para explorar</span>
       </div>
     </div>
   </main>
 
   <!-- ── Footer ── -->
   <footer class="border-t border-gold/8 py-8 px-4 sm:px-6 text-center">
-    <span class="font-mono text-[10px] text-muted tracking-widest">
+    <span class="font-mono text-xs text-muted tracking-widest">
       ⟆ Azar · 100% Frontend · Entropía del cursor
     </span>
   </footer>

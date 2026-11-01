@@ -42,7 +42,7 @@
       <span id="cartas-repeat-thumb"
             class="absolute left-0.5 top-0.5 w-4 h-4 rounded-full bg-muted transition-all duration-200"></span>
     </button>
-    <span class="font-mono text-xs text-muted">Permitir cartas repetidas</span>
+    <span class="font-mono text-sm text-sec">Permitir cartas repetidas</span>
   </div>
 
   <!-- Result -->
@@ -52,7 +52,7 @@
   </div>
 
   <button id="cartas-btn" data-hover
-          class="w-full font-mono text-xs tracking-[0.15em] uppercase bg-gold text-void py-4 rounded-sm font-medium hover:bg-amber transition-colors duration-200 active:scale-[0.99]"
+          class="w-full font-mono text-base tracking-[0.12em] uppercase bg-gold text-void py-5 rounded-sm font-medium hover:bg-amber transition-colors duration-200 active:scale-[0.99]"
           onmouseenter="this.style.boxShadow='0 0 25px rgba(212,168,67,.3)'"
           onmouseleave="this.style.boxShadow='none'">
     ♠ Sacar Carta(s)
@@ -122,7 +122,7 @@
           ${type === 'french' ? c.suit : (SPANISH_ICONS[c.suit] ?? c.suit[0])}
         </div>
         <div class="font-display text-xl text-prim">${c.val}</div>
-        <div class="font-mono text-[9px] text-muted text-center leading-tight">${type === 'spanish' ? c.suit : ''}</div>
+        <div class="font-mono text-[11px] text-muted text-center leading-tight">${type === 'spanish' ? c.suit : ''}</div>
       </div>
     `).join('');
   });
